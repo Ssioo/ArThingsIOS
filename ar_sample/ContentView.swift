@@ -9,45 +9,51 @@ import SwiftUI
 import RealityKit
 import ARKit
 
-
 struct ContentView : View {
+    @StateObject var viewModel = ContentViewModel()
+    
+    var arViewContainer = ARViewContainer()
+
     var body: some View {
-        return ARViewContainer().edgesIgnoringSafeArea(.all)
+        return ZStack {
+            Button(action: {
+                arViewContainer.arView.save()
+            }, label: {
+                Text("Save")
+            })
+            arViewContainer
+        }
+        .edgesIgnoringSafeArea(.all)
     }
+}
+
+class ContentViewModel: ObservableObject {
+    @Published var temp = ""
+
+    
 }
 
 struct ARViewContainer: UIViewRepresentable {
     
+    public let arView = ARContainer(frame: .zero)
+    
     func makeUIView(context: Context) -> ARContainer {
-        
-        let arView = ARContainer(frame: .zero)
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = .horizontal
+        config.planeDetection = [.horizontal, .vertical]
         config.sceneReconstruction = .meshWithClassification
+        config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         arView.debugOptions.insert(.showSceneUnderstanding)
-        arView.session.run(c onfig, options: [])
+        arView.session.run(config, options: [])
         
-
-        arView.setupGestures()
-        arView.addElements()
+        
+        arView.setupTapListener()
+        
         arView.session.delegate = arView
         
-        arView.session.getCurrentWorldMap { worldMap, error in
-            guard let map = worldMap else { }
-            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true) else {}
-            debugPrint(data)
-        }
-        
         return arView
-        
     }
     
     func updateUIView(_ uiView: ARContainer, context: Context) {}
-    
-    func saveWorld() {
-        arv
-    }
-    
 }
 
 

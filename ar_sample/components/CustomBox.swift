@@ -13,7 +13,7 @@ class CustomBox: ARClickable, HasAnchoring {
         super.init(
             transform: Transform(),
             model: ModelComponent(
-                mesh: .generateBox(size: [1, 0.2, 1]),
+                mesh: .generateBox(size: [0.1, 0.1, 0.1]),
                 materials: [SimpleMaterial(
                     color: color,
                     isMetallic: false
@@ -22,7 +22,7 @@ class CustomBox: ARClickable, HasAnchoring {
         )
         
         self.components[CollisionComponent] = CollisionComponent(
-            shapes: [.generateBox(size: [1, 0.2, 1])],
+            shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
             mode: .trigger,
             filter: .sensor
         )
