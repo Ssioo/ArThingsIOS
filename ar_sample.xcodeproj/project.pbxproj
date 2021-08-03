@@ -3,11 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		68A6DEDF0074EC2865003A85 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A6D543279F19835B2CB645 /* Node.swift */; };
+		975E9DF026B8BE6300D479CE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 975E9DEF26B8BE6300D479CE /* Alamofire */; };
+		975E9DF226B8C31900D479CE /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975E9DF126B8C31900D479CE /* BaseResponse.swift */; };
+		975E9DF526B9025D00D479CE /* ARWorldMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975E9DF426B9025D00D479CE /* ARWorldMap.swift */; };
 		9766D050260ABD55006801B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D04F260ABD55006801B2 /* AppDelegate.swift */; };
 		9766D052260ABD55006801B2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D051260ABD55006801B2 /* ContentView.swift */; };
 		9766D054260ABD55006801B2 /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 9766D053260ABD55006801B2 /* Experience.rcproject */; };
@@ -16,9 +19,14 @@
 		9766D064260ABD56006801B2 /* ar_sampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D063260ABD56006801B2 /* ar_sampleTests.swift */; };
 		9766D06F260ABD56006801B2 /* ar_sampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D06E260ABD56006801B2 /* ar_sampleUITests.swift */; };
 		9766D088260AC406006801B2 /* CustomBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D087260AC406006801B2 /* CustomBox.swift */; };
-		9766D08D260ACC5E006801B2 /* ARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D08C260ACC5E006801B2 /* ARContainer.swift */; };
+		9766D08D260ACC5E006801B2 /* ARCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D08C260ACC5E006801B2 /* ARCoordinator.swift */; };
 		9766D092260ACDF2006801B2 /* HasTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D091260ACDF2006801B2 /* HasTap.swift */; };
 		9766D097260ACE31006801B2 /* ARClickable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D096260ACE31006801B2 /* ARClickable.swift */; };
+		976B824826B6FBBA000D403B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824726B6FBBA000D403B /* MainViewModel.swift */; };
+		976B824A26B6FCB5000D403B /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824926B6FCB5000D403B /* AlertView.swift */; };
+		976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824B26B6FE4E000D403B /* ARContentView.swift */; };
+		976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824D26B6FED3000D403B /* ARViewModel.swift */; };
+		976B825226B75D25000D403B /* ApiModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B825126B75D25000D403B /* ApiModule.swift */; };
 		97736143260C71FA0070043E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97736142260C71FA0070043E /* ExternalAccessory.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +49,8 @@
 
 /* Begin PBXFileReference section */
 		68A6D543279F19835B2CB645 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		975E9DF126B8C31900D479CE /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
+		975E9DF426B9025D00D479CE /* ARWorldMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWorldMap.swift; sourceTree = "<group>"; };
 		9766D04C260ABD55006801B2 /* ar_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ar_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9766D04F260ABD55006801B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9766D051260ABD55006801B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,9 +65,14 @@
 		9766D06E260ABD56006801B2 /* ar_sampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ar_sampleUITests.swift; sourceTree = "<group>"; };
 		9766D070260ABD56006801B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9766D087260AC406006801B2 /* CustomBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBox.swift; sourceTree = "<group>"; };
-		9766D08C260ACC5E006801B2 /* ARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContainer.swift; sourceTree = "<group>"; };
+		9766D08C260ACC5E006801B2 /* ARCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCoordinator.swift; sourceTree = "<group>"; };
 		9766D091260ACDF2006801B2 /* HasTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTap.swift; sourceTree = "<group>"; };
 		9766D096260ACE31006801B2 /* ARClickable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARClickable.swift; sourceTree = "<group>"; };
+		976B824726B6FBBA000D403B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		976B824926B6FCB5000D403B /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		976B824B26B6FE4E000D403B /* ARContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContentView.swift; sourceTree = "<group>"; };
+		976B824D26B6FED3000D403B /* ARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewModel.swift; sourceTree = "<group>"; };
+		976B825126B75D25000D403B /* ApiModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiModule.swift; sourceTree = "<group>"; };
 		9773613D260C71EC0070043E /* ar_sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ar_sample.entitlements; sourceTree = "<group>"; };
 		97736142260C71FA0070043E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -68,6 +83,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97736143260C71FA0070043E /* ExternalAccessory.framework in Frameworks */,
+				975E9DF026B8BE6300D479CE /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,9 +107,19 @@
 		68A6D802654567DFB7DB850C /* models */ = {
 			isa = PBXGroup;
 			children = (
+				975E9DF326B9024C00D479CE /* extensions */,
 				68A6D543279F19835B2CB645 /* Node.swift */,
+				975E9DF126B8C31900D479CE /* BaseResponse.swift */,
 			);
 			path = models;
+			sourceTree = "<group>";
+		};
+		975E9DF326B9024C00D479CE /* extensions */ = {
+			isa = PBXGroup;
+			children = (
+				975E9DF426B9025D00D479CE /* ARWorldMap.swift */,
+			);
+			path = extensions;
 			sourceTree = "<group>";
 		};
 		9766D043260ABD55006801B2 = {
@@ -120,15 +146,17 @@
 		9766D04E260ABD55006801B2 /* ar_sample */ = {
 			isa = PBXGroup;
 			children = (
-				9773613D260C71EC0070043E /* ar_sample.entitlements */,
+				976B824F26B75D06000D403B /* infras */,
+				68A6D802654567DFB7DB850C /* models */,
+				976B824626B6FB81000D403B /* views */,
 				9766D09B260ACFBD006801B2 /* components */,
+				976B824526B6FB79000D403B /* viewmodels */,
+				9773613D260C71EC0070043E /* ar_sample.entitlements */,
 				9766D04F260ABD55006801B2 /* AppDelegate.swift */,
-				9766D051260ABD55006801B2 /* ContentView.swift */,
 				9766D053260ABD55006801B2 /* Experience.rcproject */,
 				9766D055260ABD56006801B2 /* Assets.xcassets */,
 				9766D05A260ABD56006801B2 /* Info.plist */,
 				9766D057260ABD56006801B2 /* Preview Content */,
-				68A6D802654567DFB7DB850C /* models */,
 			);
 			path = ar_sample;
 			sourceTree = "<group>";
@@ -164,10 +192,45 @@
 			children = (
 				9766D091260ACDF2006801B2 /* HasTap.swift */,
 				9766D096260ACE31006801B2 /* ARClickable.swift */,
-				9766D08C260ACC5E006801B2 /* ARContainer.swift */,
 				9766D087260AC406006801B2 /* CustomBox.swift */,
 			);
 			path = components;
+			sourceTree = "<group>";
+		};
+		976B824526B6FB79000D403B /* viewmodels */ = {
+			isa = PBXGroup;
+			children = (
+				976B824726B6FBBA000D403B /* MainViewModel.swift */,
+				976B824D26B6FED3000D403B /* ARViewModel.swift */,
+			);
+			path = viewmodels;
+			sourceTree = "<group>";
+		};
+		976B824626B6FB81000D403B /* views */ = {
+			isa = PBXGroup;
+			children = (
+				9766D051260ABD55006801B2 /* ContentView.swift */,
+				976B824926B6FCB5000D403B /* AlertView.swift */,
+				976B824B26B6FE4E000D403B /* ARContentView.swift */,
+				9766D08C260ACC5E006801B2 /* ARCoordinator.swift */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		976B824F26B75D06000D403B /* infras */ = {
+			isa = PBXGroup;
+			children = (
+				976B825026B75D10000D403B /* utils */,
+			);
+			path = infras;
+			sourceTree = "<group>";
+		};
+		976B825026B75D10000D403B /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				976B825126B75D25000D403B /* ApiModule.swift */,
+			);
+			path = utils;
 			sourceTree = "<group>";
 		};
 		97736141260C71FA0070043E /* Frameworks */ = {
@@ -194,6 +257,9 @@
 			dependencies = (
 			);
 			name = ar_sample;
+			packageProductDependencies = (
+				975E9DEF26B8BE6300D479CE /* Alamofire */,
+			);
 			productName = ar_sample;
 			productReference = 9766D04C260ABD55006801B2 /* ar_sample.app */;
 			productType = "com.apple.product-type.application";
@@ -265,6 +331,9 @@
 				Base,
 			);
 			mainGroup = 9766D043260ABD55006801B2;
+			packageReferences = (
+				975E9DEE26B8BE6300D479CE /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			productRefGroup = 9766D04D260ABD55006801B2 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -307,14 +376,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				975E9DF526B9025D00D479CE /* ARWorldMap.swift in Sources */,
 				9766D052260ABD55006801B2 /* ContentView.swift in Sources */,
 				9766D050260ABD55006801B2 /* AppDelegate.swift in Sources */,
 				9766D088260AC406006801B2 /* CustomBox.swift in Sources */,
+				976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */,
 				9766D054260ABD55006801B2 /* Experience.rcproject in Sources */,
+				976B825226B75D25000D403B /* ApiModule.swift in Sources */,
 				9766D092260ACDF2006801B2 /* HasTap.swift in Sources */,
-				9766D08D260ACC5E006801B2 /* ARContainer.swift in Sources */,
+				976B824A26B6FCB5000D403B /* AlertView.swift in Sources */,
+				976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */,
+				9766D08D260ACC5E006801B2 /* ARCoordinator.swift in Sources */,
 				9766D097260ACE31006801B2 /* ARClickable.swift in Sources */,
+				975E9DF226B8C31900D479CE /* BaseResponse.swift in Sources */,
 				68A6DEDF0074EC2865003A85 /* Node.swift in Sources */,
+				976B824826B6FBBA000D403B /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -634,6 +710,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		975E9DEE26B8BE6300D479CE /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.4.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		975E9DEF26B8BE6300D479CE /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 975E9DEE26B8BE6300D479CE /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9766D044260ABD55006801B2 /* Project object */;
 }
