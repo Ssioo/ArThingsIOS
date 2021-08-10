@@ -8,23 +8,33 @@
 import Foundation
 import SwiftUI
 
+struct AlertObject {
+    let title: String
+    let message: String
+    let onOk: () -> Void
+    let onNo: (() -> Void)?
+}
+
 struct AlertTextView: UIViewControllerRepresentable {
     @Binding var isShowAlert: Bool
-    @Binding var onOk: () -> Void
+    @Binding var alertObject: AlertObject?
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<AlertTextView>) -> some UIViewController {
         return UIViewController()
     }
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: UIViewControllerRepresentableContext<AlertTextView>) {
         if isShowAlert {
-            let alert = UIAlertController(title: "Add Node", message: "Do you want to place virtual node here?", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: { _ in
-                // 취소버튼
-                alert.dismiss(animated: true, completion: nil)
-            }))
+            let alert = UIAlertController(title: alertObject?.title ?? "", message: alertObject?.message, preferredStyle: .alert)
+            if alertObject?.onNo != nil {
+                alert.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: { _ in
+                    // 취소버튼
+                    alertObject?.onNo?()
+                    alert.dismiss(animated: true, completion: nil)
+                }))
+            }
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
                 // 확인버튼
-                onOk()
+                alertObject?.onOk()
                 alert.dismiss(animated: true, completion: nil)
             }))
             DispatchQueue.main.async {

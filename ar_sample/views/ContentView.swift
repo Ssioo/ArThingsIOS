@@ -10,16 +10,16 @@ import RealityKit
 import ARKit
 
 struct ContentView : View {
-    @StateObject var vm = MainViewModel()
-    @StateObject var arVm = ARViewModel()
+    @StateObject var vm = ARViewModel()
 
     var body: some View {
-        return ZStack(alignment: .bottom) {
+        return ZStack(alignment: .bottom) {   
             AlertTextView(
                 isShowAlert: $vm.isShowAlert,
-                onOk: $vm.onAlertOk
+                alertObject: $vm.alertObject
             )
-            ARContentView(mainVm: vm, vm: arVm)
+            ARContentView(vm: vm)
+            LoadingView(isLoading: $vm.isLoading)
         }
         .edgesIgnoringSafeArea(.all)
     }

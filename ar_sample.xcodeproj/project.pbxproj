@@ -8,9 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		68A6DEDF0074EC2865003A85 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A6D543279F19835B2CB645 /* Node.swift */; };
+		97249A5526BB75D200B895DD /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5426BB75D200B895DD /* LoadingView.swift */; };
+		97249A5726BB79FD00B895DD /* ARNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5626BB79FD00B895DD /* ARNode.swift */; };
+		97249A5926BB7B0700B895DD /* ARNodeInfomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */; };
+		97249A5B26BBD44F00B895DD /* BaseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5A26BBD44F00B895DD /* BaseViewModel.swift */; };
+		97249A5D26BD03A300B895DD /* PickerSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5C26BD03A300B895DD /* PickerSheetView.swift */; };
+		97249A5F26BD248100B895DD /* RemoteFileGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5E26BD248100B895DD /* RemoteFileGenerator.swift */; };
+		97249A6126C2133100B895DD /* solar_panels_stylized.usdz in Resources */ = {isa = PBXBuildFile; fileRef = 97249A6026C2133100B895DD /* solar_panels_stylized.usdz */; };
 		975E9DF026B8BE6300D479CE /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 975E9DEF26B8BE6300D479CE /* Alamofire */; };
 		975E9DF226B8C31900D479CE /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975E9DF126B8C31900D479CE /* BaseResponse.swift */; };
-		975E9DF526B9025D00D479CE /* ARWorldMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975E9DF426B9025D00D479CE /* ARWorldMap.swift */; };
+		975E9DF526B9025D00D479CE /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975E9DF426B9025D00D479CE /* Extensions.swift */; };
 		9766D050260ABD55006801B2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D04F260ABD55006801B2 /* AppDelegate.swift */; };
 		9766D052260ABD55006801B2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D051260ABD55006801B2 /* ContentView.swift */; };
 		9766D054260ABD55006801B2 /* Experience.rcproject in Sources */ = {isa = PBXBuildFile; fileRef = 9766D053260ABD55006801B2 /* Experience.rcproject */; };
@@ -18,11 +25,7 @@
 		9766D059260ABD56006801B2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9766D058260ABD56006801B2 /* Preview Assets.xcassets */; };
 		9766D064260ABD56006801B2 /* ar_sampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D063260ABD56006801B2 /* ar_sampleTests.swift */; };
 		9766D06F260ABD56006801B2 /* ar_sampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D06E260ABD56006801B2 /* ar_sampleUITests.swift */; };
-		9766D088260AC406006801B2 /* CustomBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D087260AC406006801B2 /* CustomBox.swift */; };
 		9766D08D260ACC5E006801B2 /* ARCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D08C260ACC5E006801B2 /* ARCoordinator.swift */; };
-		9766D092260ACDF2006801B2 /* HasTap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D091260ACDF2006801B2 /* HasTap.swift */; };
-		9766D097260ACE31006801B2 /* ARClickable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9766D096260ACE31006801B2 /* ARClickable.swift */; };
-		976B824826B6FBBA000D403B /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824726B6FBBA000D403B /* MainViewModel.swift */; };
 		976B824A26B6FCB5000D403B /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824926B6FCB5000D403B /* AlertView.swift */; };
 		976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824B26B6FE4E000D403B /* ARContentView.swift */; };
 		976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824D26B6FED3000D403B /* ARViewModel.swift */; };
@@ -49,8 +52,15 @@
 
 /* Begin PBXFileReference section */
 		68A6D543279F19835B2CB645 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		97249A5426BB75D200B895DD /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		97249A5626BB79FD00B895DD /* ARNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNode.swift; sourceTree = "<group>"; };
+		97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNodeInfomation.swift; sourceTree = "<group>"; };
+		97249A5A26BBD44F00B895DD /* BaseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewModel.swift; sourceTree = "<group>"; };
+		97249A5C26BD03A300B895DD /* PickerSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerSheetView.swift; sourceTree = "<group>"; };
+		97249A5E26BD248100B895DD /* RemoteFileGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFileGenerator.swift; sourceTree = "<group>"; };
+		97249A6026C2133100B895DD /* solar_panels_stylized.usdz */ = {isa = PBXFileReference; lastKnownFileType = file.usdz; path = solar_panels_stylized.usdz; sourceTree = "<group>"; };
 		975E9DF126B8C31900D479CE /* BaseResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseResponse.swift; sourceTree = "<group>"; };
-		975E9DF426B9025D00D479CE /* ARWorldMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWorldMap.swift; sourceTree = "<group>"; };
+		975E9DF426B9025D00D479CE /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		9766D04C260ABD55006801B2 /* ar_sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ar_sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9766D04F260ABD55006801B2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9766D051260ABD55006801B2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -64,11 +74,7 @@
 		9766D06A260ABD56006801B2 /* ar_sampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ar_sampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9766D06E260ABD56006801B2 /* ar_sampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ar_sampleUITests.swift; sourceTree = "<group>"; };
 		9766D070260ABD56006801B2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9766D087260AC406006801B2 /* CustomBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomBox.swift; sourceTree = "<group>"; };
 		9766D08C260ACC5E006801B2 /* ARCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARCoordinator.swift; sourceTree = "<group>"; };
-		9766D091260ACDF2006801B2 /* HasTap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HasTap.swift; sourceTree = "<group>"; };
-		9766D096260ACE31006801B2 /* ARClickable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARClickable.swift; sourceTree = "<group>"; };
-		976B824726B6FBBA000D403B /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
 		976B824926B6FCB5000D403B /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		976B824B26B6FE4E000D403B /* ARContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARContentView.swift; sourceTree = "<group>"; };
 		976B824D26B6FED3000D403B /* ARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewModel.swift; sourceTree = "<group>"; };
@@ -110,6 +116,7 @@
 				975E9DF326B9024C00D479CE /* extensions */,
 				68A6D543279F19835B2CB645 /* Node.swift */,
 				975E9DF126B8C31900D479CE /* BaseResponse.swift */,
+				97249A5E26BD248100B895DD /* RemoteFileGenerator.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -117,7 +124,7 @@
 		975E9DF326B9024C00D479CE /* extensions */ = {
 			isa = PBXGroup;
 			children = (
-				975E9DF426B9025D00D479CE /* ARWorldMap.swift */,
+				975E9DF426B9025D00D479CE /* Extensions.swift */,
 			);
 			path = extensions;
 			sourceTree = "<group>";
@@ -155,6 +162,7 @@
 				9766D04F260ABD55006801B2 /* AppDelegate.swift */,
 				9766D053260ABD55006801B2 /* Experience.rcproject */,
 				9766D055260ABD56006801B2 /* Assets.xcassets */,
+				97249A6026C2133100B895DD /* solar_panels_stylized.usdz */,
 				9766D05A260ABD56006801B2 /* Info.plist */,
 				9766D057260ABD56006801B2 /* Preview Content */,
 			);
@@ -190,9 +198,9 @@
 		9766D09B260ACFBD006801B2 /* components */ = {
 			isa = PBXGroup;
 			children = (
-				9766D091260ACDF2006801B2 /* HasTap.swift */,
-				9766D096260ACE31006801B2 /* ARClickable.swift */,
-				9766D087260AC406006801B2 /* CustomBox.swift */,
+				97249A5626BB79FD00B895DD /* ARNode.swift */,
+				97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */,
+				97249A5C26BD03A300B895DD /* PickerSheetView.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -200,8 +208,8 @@
 		976B824526B6FB79000D403B /* viewmodels */ = {
 			isa = PBXGroup;
 			children = (
-				976B824726B6FBBA000D403B /* MainViewModel.swift */,
 				976B824D26B6FED3000D403B /* ARViewModel.swift */,
+				97249A5A26BBD44F00B895DD /* BaseViewModel.swift */,
 			);
 			path = viewmodels;
 			sourceTree = "<group>";
@@ -211,6 +219,7 @@
 			children = (
 				9766D051260ABD55006801B2 /* ContentView.swift */,
 				976B824926B6FCB5000D403B /* AlertView.swift */,
+				97249A5426BB75D200B895DD /* LoadingView.swift */,
 				976B824B26B6FE4E000D403B /* ARContentView.swift */,
 				9766D08C260ACC5E006801B2 /* ARCoordinator.swift */,
 			);
@@ -352,6 +361,7 @@
 			files = (
 				9766D059260ABD56006801B2 /* Preview Assets.xcassets in Resources */,
 				9766D056260ABD56006801B2 /* Assets.xcassets in Resources */,
+				97249A6126C2133100B895DD /* solar_panels_stylized.usdz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,21 +386,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				975E9DF526B9025D00D479CE /* ARWorldMap.swift in Sources */,
+				975E9DF526B9025D00D479CE /* Extensions.swift in Sources */,
 				9766D052260ABD55006801B2 /* ContentView.swift in Sources */,
+				97249A5926BB7B0700B895DD /* ARNodeInfomation.swift in Sources */,
 				9766D050260ABD55006801B2 /* AppDelegate.swift in Sources */,
-				9766D088260AC406006801B2 /* CustomBox.swift in Sources */,
 				976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */,
+				97249A5526BB75D200B895DD /* LoadingView.swift in Sources */,
+				97249A5D26BD03A300B895DD /* PickerSheetView.swift in Sources */,
+				97249A5726BB79FD00B895DD /* ARNode.swift in Sources */,
 				9766D054260ABD55006801B2 /* Experience.rcproject in Sources */,
 				976B825226B75D25000D403B /* ApiModule.swift in Sources */,
-				9766D092260ACDF2006801B2 /* HasTap.swift in Sources */,
+				97249A5F26BD248100B895DD /* RemoteFileGenerator.swift in Sources */,
 				976B824A26B6FCB5000D403B /* AlertView.swift in Sources */,
 				976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */,
 				9766D08D260ACC5E006801B2 /* ARCoordinator.swift in Sources */,
-				9766D097260ACE31006801B2 /* ARClickable.swift in Sources */,
+				97249A5B26BBD44F00B895DD /* BaseViewModel.swift in Sources */,
 				975E9DF226B8C31900D479CE /* BaseResponse.swift in Sources */,
 				68A6DEDF0074EC2865003A85 /* Node.swift in Sources */,
-				976B824826B6FBBA000D403B /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
