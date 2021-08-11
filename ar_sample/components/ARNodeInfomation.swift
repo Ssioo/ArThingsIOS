@@ -8,3 +8,20 @@
 import Foundation
 import SwiftUI
 import RealityKit
+import ARKit
+
+class ARNodeInfomationView: UIView {
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+    }
+    
+    convenience init() {
+        self.init(frame: CGRect(x: 0, y: 0, width: 300, height: 100))
+        var text = UILabel()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+}

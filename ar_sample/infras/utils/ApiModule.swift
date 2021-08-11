@@ -56,7 +56,8 @@ class APiModule {
         url: String,
         params: [String : String],
         fileURL: URL,
-        onFinish: ((URL) -> Void)? = nil
+        onProgress: ((Double) -> Void)? = nil,
+        onFinish: (([Int:Double]) -> Void)? = nil
     ) {
         sessionManager.download(
             "\(SOLACLE_URL)\(url)",
@@ -69,8 +70,12 @@ class APiModule {
         )
         .cacheResponse(using: ResponseCacher(behavior: .doNotCache))
         .validate()
+        .downloadProgress { progress in
+            onProgress?(progress.fractionCompleted)
+        }
         .response { res in
-            onFinish?(fileURL)
+            let csv = fileURL.readCSV()
+            onFinish?(csv)
         }
     }
     

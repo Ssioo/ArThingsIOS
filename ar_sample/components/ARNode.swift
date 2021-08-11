@@ -17,9 +17,12 @@ class ARNode: Entity, HasAnchoring {
     
     var infoEntity: ModelEntity? = nil
     var nodeEntity: Entity? = nil
+    var customInfoEntity: ModelEntity? = nil
     
     convenience init(pos: SIMD3<Float>, onTapNode: ((ARNode) -> Void)? = nil, onTapInfo: ((ARNode) -> Void)? = nil) {
         self.init()
+        let uniqueId = UUID().uuidString
+        
         self.transform = Transform()
         self.onTapNode = onTapNode
         self.onTapInfo = onTapInfo
@@ -37,7 +40,7 @@ class ARNode: Entity, HasAnchoring {
         }
         
         self.nodeEntity = loadedModel
-        self.nodeEntity?.name = "VirtualNode1"
+        self.nodeEntity?.name = "\(uniqueId)_VirtualNode"
         self.addChild(self.nodeEntity!)
         
         self.infoEntity = ModelEntity(
@@ -51,8 +54,23 @@ class ARNode: Entity, HasAnchoring {
             ),
             materials: [SimpleMaterial(color: .white, isMetallic: true)])
         self.infoEntity?.setPosition([0, 0, 0.1], relativeTo: self.nodeEntity!)
-        self.infoEntity?.name = "InfoNode1"
+        self.infoEntity?.name = "\(uniqueId)_InfoNode"
         self.addChild(self.infoEntity!)
+        
+        do {
+            var customViewMaterial = UnlitMaterial()
+            let infoView = ARNodeInfomationView()
+            customViewMaterial.baseColor = try MaterialColorParameter.texture(.generate(from: infoView.snapshot()!, options: TextureResource.CreateOptions(semantic: nil, mipmapsMode: .allocateAndGenerateAll)))
+            self.customInfoEntity = ModelEntity(
+                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
+                materials: [customViewMaterial]
+            )
+            self.infoEntity?.setPosition([0, 0, 0.1], relativeTo: self.nodeEntity!)
+            self.addChild(self.customInfoEntity!)
+        } catch {
+            fatalError()
+        }
+        
         
         self.components[CollisionComponent] = CollisionComponent(
             shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
@@ -62,7 +80,7 @@ class ARNode: Entity, HasAnchoring {
         
         
         //self.generateCollisionShapes(recursive: true)
-        
+        self.name = uniqueId
         self.position = pos
         
     }
@@ -79,6 +97,7 @@ class ARNode: Entity, HasAnchoring {
             ),
             materials: [SimpleMaterial(color: .black, isMetallic: false)]
         )
+        
     }
     
     required init() {

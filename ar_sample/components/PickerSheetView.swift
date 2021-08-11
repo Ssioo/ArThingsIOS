@@ -19,7 +19,7 @@ struct PickerSheetView: View {
     @Binding var enableSheet: Bool
     
     var body: some View {
-        if enableSheet {
+        if $enableSheet.wrappedValue {
             GeometryReader { gr in
                 VStack {
                     VStack {
@@ -30,11 +30,12 @@ struct PickerSheetView: View {
                         Text(subtitle)
                             .padding(.top, 5)
                         Picker("Picker", selection: $selectedObj) {
-                            ForEach(objs, id: \.self) { item in
-                                Text(item).tag(item)
+                            ForEach(objs, id: \.self) {
+                                Text($0)
                             }
                             Text("Create Room").tag("New")
                         }.labelsHidden()
+                            .pickerStyle(WheelPickerStyle())
                     }.background(RoundedRectangle(cornerRadius: 10)
                         .foregroundColor(Color.white).shadow(radius: 1))
                     VStack {

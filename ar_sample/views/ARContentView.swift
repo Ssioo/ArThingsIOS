@@ -191,9 +191,28 @@ struct ARViewContainer: UIViewRepresentable {
     
     func addElement(pos: SIMD3<Float>) {
         let onTap: (ARNode) -> Void = { node in
-            let randIn = arc4random() % 100
-            node.updateData(newData: "\(randIn)")
+            
             // TODO: Harvesting 데이터 연결
+            self.vm.getSolacleHarvDataAt(
+                pos: pos,
+                onPogress: { progress in
+                    debugPrint(progress)
+                },
+                onRes: { res in
+                    debugPrint(res)
+                    var maxWatt = 0.0
+                    var sumWatt = 0.0
+            
+                    res.forEach { key, value in
+                        if value > maxWatt {
+                            maxWatt = value
+                        }
+                        sumWatt = sumWatt + value
+                    }
+                    let avgWatt = sumWatt / 24
+                    node.updateData(newData: "SUM: \(sumWatt)W, MAX: \(maxWatt)W, AVG: \(avgWatt)Wh")
+                }
+            )
         }
         let greenBoxAnchor = ARNode(pos: pos, onTapNode: onTap, onTapInfo: nil)
         self.arView.scene.anchors.append(greenBoxAnchor)

@@ -55,17 +55,12 @@ extension ARMeshGeometry {
     
 }
 
-extension View {
+extension UIView {
     func snapshot() -> CGImage? {
-        let controller = UIHostingController(rootView: self)
-        let view = controller.view
-        let targetSize = controller.view.intrinsicContentSize
-        view?.bounds = CGRect(origin: .zero, size: targetSize)
-        view?.backgroundColor = .clear
         
-        let renderer = UIGraphicsImageRenderer(size: targetSize)
-        let uiImage = renderer.image { _ in
-            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        let renderer = UIGraphicsImageRenderer(bounds: self.bounds)
+        let uiImage = renderer.image { context in
+            self.layer.render(in: context.cgContext)
         }
         guard let ciImage = CIImage(image: uiImage) else { return nil }
         return CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
@@ -139,3 +134,24 @@ extension ARFrame {
         }
         return asset
     }}
+
+extension URL {
+    func readCSV() -> [Int:Double] {
+        do {
+            let content = try String(contentsOf: self)
+            var result: [Int : Double] = [:]
+            content.components(separatedBy: "\n")
+                .forEach { row in
+                    let val = row.components(separatedBy: ",")
+                    debugPrint(val)
+                    if val.count != 2 {
+                        return
+                    }
+                    result[Int(val[0])!] = Double(val[1])
+                }
+            return result
+        } catch {
+            return [:]
+        }
+    }
+}

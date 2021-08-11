@@ -89,6 +89,7 @@ class ARViewModel: BaseViewModel {
         )
     }
     
+    
     func fetchARRoomMap(roomId: String, mapPath: String, onFinish: ((ARData?) -> Void)? = nil) {
         APiModule.instance.get(
             of: RemotePureFileContent.self,
@@ -110,6 +111,25 @@ class ARViewModel: BaseViewModel {
             }
         )
     }
+    
+    func getSolacleHarvDataAt(pos: SIMD3<Float>, onPogress: ((Double) -> Void)? = nil,onRes: (([Int: Double]) -> Void)? = nil) {
+        let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let filePath = dir.appendingPathComponent("harv.csv")
+        APiModule.instance
+            .getSolacle(
+                url: "/download",
+                params: [
+                    "room": "806",
+                    "x": "\(pos.x)",
+                    "y": "\(pos.y)",
+                    "z": "\(pos.z)"
+                ],
+                fileURL: filePath,
+                onProgress: onPogress,
+                onFinish: onRes
+            )
+    }
+    
     
     func createNewARRoom() {
         let newARRoomId = UUID.init().uuidString
@@ -148,20 +168,30 @@ class ARViewModel: BaseViewModel {
         let currentRoomPath = currentRoom
         if currentRoom == "" { return false }
         let time = Date().timeIntervalSince1970
+        let usdPath = "\(time).usd"
+        let objPath = "\(time).obj"
+        let mapPath = "\(time)_map.json"
         
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let urlOBJ = documentsPath.appendingPathComponent("\(time).obj")
+        let urlOBJ = documentsPath.appendingPathComponent(objPath)
+        let urlUSD = documentsPath.appendingPathComponent(usdPath)
         
-        // Exporting the OBJ file
-        if MDLAsset.canExportFileExtension("obj") {
+        // Exporting the USD file
+        if MDLAsset.canExportFileExtension("usd") {
+            do {
+                try self.lastMeshes?.export(to: urlUSD)
+            } catch {
+                fatalError()
+            }
+        }
+        if MDLAsset.canExportFileExtension("usd") {
             do {
                 try self.lastMeshes?.export(to: urlOBJ)
                 let meshString = try String(contentsOf: urlOBJ, encoding: .utf8)
                 try FileManager.default.removeItem(at: urlOBJ)
                 
                 var cleared: [Bool] = [false, false, false]
-                let objPath = "\(time).obj"
-                let mapPath = "\(time)_map.json"
+                
                 guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else { return false }
         
                 
@@ -258,9 +288,14 @@ class ARViewModel: BaseViewModel {
             )
     }
     
+    
     func makeInitialARRoomJSON(objPath: String, mapPath: String) -> String {
-        let anchors = self.anchors.map { (anchor, pos) in
-            RemoteARAnchor(id: UUID().uuidString, pos: RemoteARAnchorPosition(x: pos.x, y: pos.y, z: pos.y))
+        let anchors = self.anchors.map { (anchor, pos) -> RemoteARAnchor in
+            var anchorId = anchor.name
+            if anchor.name == "" {
+                anchorId = UUID().uuidString
+            }
+            return RemoteARAnchor(id: anchorId, pos: RemoteARAnchorPosition(x: pos.x, y: pos.y, z: pos.y))
         }
         
         do {

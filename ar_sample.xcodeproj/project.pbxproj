@@ -8,6 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		68A6DEDF0074EC2865003A85 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A6D543279F19835B2CB645 /* Node.swift */; };
+		9718717126C38F0E001CE29E /* ios_launcher_152.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716326C38F0E001CE29E /* ios_launcher_152.png */; };
+		9718717226C38F0E001CE29E /* ios_launcher_80.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716426C38F0E001CE29E /* ios_launcher_80.png */; };
+		9718717326C38F0E001CE29E /* ios_launcher_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716526C38F0E001CE29E /* ios_launcher_180.png */; };
+		9718717526C38F0E001CE29E /* ios_launcher_29.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716726C38F0E001CE29E /* ios_launcher_29.png */; };
+		9718717626C38F0E001CE29E /* ios_launcher_20.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716826C38F0E001CE29E /* ios_launcher_20.png */; };
+		9718717726C38F0E001CE29E /* ios_launcher_1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716926C38F0E001CE29E /* ios_launcher_1024.png */; };
+		9718717826C38F0E001CE29E /* ios_launcher_40.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716A26C38F0E001CE29E /* ios_launcher_40.png */; };
+		9718717926C38F0E001CE29E /* ios_launcher_76.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716B26C38F0E001CE29E /* ios_launcher_76.png */; };
+		9718717A26C38F0E001CE29E /* ios_launcher_167.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716C26C38F0E001CE29E /* ios_launcher_167.png */; };
+		9718717B26C38F0E001CE29E /* ios_launcher_87.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716D26C38F0E001CE29E /* ios_launcher_87.png */; };
+		9718717C26C38F0E001CE29E /* ios_launcher_58.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716E26C38F0E001CE29E /* ios_launcher_58.png */; };
+		9718717D26C38F0E001CE29E /* ios_launcher_120.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716F26C38F0E001CE29E /* ios_launcher_120.png */; };
+		9718717E26C38F0E001CE29E /* ios_launcher_60.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718717026C38F0E001CE29E /* ios_launcher_60.png */; };
 		97249A5526BB75D200B895DD /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5426BB75D200B895DD /* LoadingView.swift */; };
 		97249A5726BB79FD00B895DD /* ARNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5626BB79FD00B895DD /* ARNode.swift */; };
 		97249A5926BB7B0700B895DD /* ARNodeInfomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */; };
@@ -52,6 +65,19 @@
 
 /* Begin PBXFileReference section */
 		68A6D543279F19835B2CB645 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		9718716326C38F0E001CE29E /* ios_launcher_152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_152.png; sourceTree = "<group>"; };
+		9718716426C38F0E001CE29E /* ios_launcher_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_80.png; sourceTree = "<group>"; };
+		9718716526C38F0E001CE29E /* ios_launcher_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_180.png; sourceTree = "<group>"; };
+		9718716726C38F0E001CE29E /* ios_launcher_29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_29.png; sourceTree = "<group>"; };
+		9718716826C38F0E001CE29E /* ios_launcher_20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_20.png; sourceTree = "<group>"; };
+		9718716926C38F0E001CE29E /* ios_launcher_1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_1024.png; sourceTree = "<group>"; };
+		9718716A26C38F0E001CE29E /* ios_launcher_40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_40.png; sourceTree = "<group>"; };
+		9718716B26C38F0E001CE29E /* ios_launcher_76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_76.png; sourceTree = "<group>"; };
+		9718716C26C38F0E001CE29E /* ios_launcher_167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_167.png; sourceTree = "<group>"; };
+		9718716D26C38F0E001CE29E /* ios_launcher_87.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_87.png; sourceTree = "<group>"; };
+		9718716E26C38F0E001CE29E /* ios_launcher_58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_58.png; sourceTree = "<group>"; };
+		9718716F26C38F0E001CE29E /* ios_launcher_120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_120.png; sourceTree = "<group>"; };
+		9718717026C38F0E001CE29E /* ios_launcher_60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_60.png; sourceTree = "<group>"; };
 		97249A5426BB75D200B895DD /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		97249A5626BB79FD00B895DD /* ARNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNode.swift; sourceTree = "<group>"; };
 		97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARNodeInfomation.swift; sourceTree = "<group>"; };
@@ -162,7 +188,6 @@
 				9766D04F260ABD55006801B2 /* AppDelegate.swift */,
 				9766D053260ABD55006801B2 /* Experience.rcproject */,
 				9766D055260ABD56006801B2 /* Assets.xcassets */,
-				97249A6026C2133100B895DD /* solar_panels_stylized.usdz */,
 				9766D05A260ABD56006801B2 /* Info.plist */,
 				9766D057260ABD56006801B2 /* Preview Content */,
 			);
@@ -229,6 +254,20 @@
 		976B824F26B75D06000D403B /* infras */ = {
 			isa = PBXGroup;
 			children = (
+				9718716826C38F0E001CE29E /* ios_launcher_20.png */,
+				9718716726C38F0E001CE29E /* ios_launcher_29.png */,
+				9718716A26C38F0E001CE29E /* ios_launcher_40.png */,
+				9718716E26C38F0E001CE29E /* ios_launcher_58.png */,
+				9718717026C38F0E001CE29E /* ios_launcher_60.png */,
+				9718716B26C38F0E001CE29E /* ios_launcher_76.png */,
+				9718716426C38F0E001CE29E /* ios_launcher_80.png */,
+				9718716D26C38F0E001CE29E /* ios_launcher_87.png */,
+				9718716F26C38F0E001CE29E /* ios_launcher_120.png */,
+				9718716326C38F0E001CE29E /* ios_launcher_152.png */,
+				9718716C26C38F0E001CE29E /* ios_launcher_167.png */,
+				9718716526C38F0E001CE29E /* ios_launcher_180.png */,
+				9718716926C38F0E001CE29E /* ios_launcher_1024.png */,
+				97249A6026C2133100B895DD /* solar_panels_stylized.usdz */,
 				976B825026B75D10000D403B /* utils */,
 			);
 			path = infras;
@@ -361,7 +400,20 @@
 			files = (
 				9766D059260ABD56006801B2 /* Preview Assets.xcassets in Resources */,
 				9766D056260ABD56006801B2 /* Assets.xcassets in Resources */,
+				9718717126C38F0E001CE29E /* ios_launcher_152.png in Resources */,
 				97249A6126C2133100B895DD /* solar_panels_stylized.usdz in Resources */,
+				9718717526C38F0E001CE29E /* ios_launcher_29.png in Resources */,
+				9718717D26C38F0E001CE29E /* ios_launcher_120.png in Resources */,
+				9718717E26C38F0E001CE29E /* ios_launcher_60.png in Resources */,
+				9718717B26C38F0E001CE29E /* ios_launcher_87.png in Resources */,
+				9718717C26C38F0E001CE29E /* ios_launcher_58.png in Resources */,
+				9718717226C38F0E001CE29E /* ios_launcher_80.png in Resources */,
+				9718717626C38F0E001CE29E /* ios_launcher_20.png in Resources */,
+				9718717A26C38F0E001CE29E /* ios_launcher_167.png in Resources */,
+				9718717826C38F0E001CE29E /* ios_launcher_40.png in Resources */,
+				9718717726C38F0E001CE29E /* ios_launcher_1024.png in Resources */,
+				9718717926C38F0E001CE29E /* ios_launcher_76.png in Resources */,
+				9718717326C38F0E001CE29E /* ios_launcher_180.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,7 +541,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -544,7 +596,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -569,7 +621,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.whoissio.ar-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -591,7 +643,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.whoissio.ar-sample";
+				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -692,7 +744,7 @@
 				9766D072260ABD56006801B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		9766D073260ABD56006801B2 /* Build configuration list for PBXNativeTarget "ar_sample" */ = {
 			isa = XCConfigurationList;
@@ -701,7 +753,7 @@
 				9766D075260ABD56006801B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		9766D076260ABD56006801B2 /* Build configuration list for PBXNativeTarget "ar_sampleTests" */ = {
 			isa = XCConfigurationList;
@@ -710,7 +762,7 @@
 				9766D078260ABD56006801B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		9766D079260ABD56006801B2 /* Build configuration list for PBXNativeTarget "ar_sampleUITests" */ = {
 			isa = XCConfigurationList;
@@ -719,7 +771,7 @@
 				9766D07B260ABD56006801B2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 
