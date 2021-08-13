@@ -62,7 +62,10 @@ extension UIView {
         let uiImage = renderer.image { context in
             self.layer.render(in: context.cgContext)
         }
+        debugPrint("UIIMage", uiImage)
+    
         guard let ciImage = CIImage(image: uiImage) else { return nil }
+        debugPrint("CIImage", ciImage)
         return CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
     }
 }

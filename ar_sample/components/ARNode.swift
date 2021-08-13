@@ -13,11 +13,10 @@ import ARKit
 class ARNode: Entity, HasAnchoring {
     var onTapNode: ((ARNode) -> Void)? = nil
     var onTapInfo: ((ARNode) -> Void)? = nil
+    var isInfoShown: Bool = false
     
-    
-    var infoEntity: ModelEntity? = nil
     var nodeEntity: Entity? = nil
-    var customInfoEntity: ModelEntity? = nil
+    var customInfoEntity: ARInfoNode? = nil
     
     convenience init(pos: SIMD3<Float>, onTapNode: ((ARNode) -> Void)? = nil, onTapInfo: ((ARNode) -> Void)? = nil) {
         self.init()
@@ -43,34 +42,10 @@ class ARNode: Entity, HasAnchoring {
         self.nodeEntity?.name = "\(uniqueId)_VirtualNode"
         self.addChild(self.nodeEntity!)
         
-        self.infoEntity = ModelEntity(
-            mesh: .generateText(
-                "",
-                extrusionDepth: 0.01,
-                font: .systemFont(ofSize: 0.1),
-                containerFrame: .zero,
-                alignment: .center,
-                lineBreakMode: .byTruncatingTail
-            ),
-            materials: [SimpleMaterial(color: .white, isMetallic: true)])
-        self.infoEntity?.setPosition([0, 0, 0.1], relativeTo: self.nodeEntity!)
-        self.infoEntity?.name = "\(uniqueId)_InfoNode"
-        self.addChild(self.infoEntity!)
         
-        do {
-            var customViewMaterial = UnlitMaterial()
-            let infoView = ARNodeInfomationView()
-            customViewMaterial.baseColor = try MaterialColorParameter.texture(.generate(from: infoView.snapshot()!, options: TextureResource.CreateOptions(semantic: nil, mipmapsMode: .allocateAndGenerateAll)))
-            self.customInfoEntity = ModelEntity(
-                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
-                materials: [customViewMaterial]
-            )
-            self.infoEntity?.setPosition([0, 0, 0.1], relativeTo: self.nodeEntity!)
-            self.addChild(self.customInfoEntity!)
-        } catch {
-            fatalError()
-        }
-        
+        self.customInfoEntity = ARInfoNode(name: "\(uniqueId)_InfoNode")
+        self.customInfoEntity?.setPosition([0, 0.1, 0], relativeTo: self)
+        //self.addChild(self.customInfoEntity!)
         
         self.components[CollisionComponent] = CollisionComponent(
             shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
@@ -85,19 +60,47 @@ class ARNode: Entity, HasAnchoring {
         
     }
     
-    func updateData(newData: String) {
-        self.infoEntity?.model = ModelComponent(
-            mesh: .generateText(
-                "\(newData)",
-                extrusionDepth: 0.01,
-                font: .systemFont(ofSize: 0.1),
-                containerFrame: .zero,
-                alignment: .center,
-                lineBreakMode: .byTruncatingTail
-            ),
-            materials: [SimpleMaterial(color: .black, isMetallic: false)]
-        )
+    func updateData(newData: [Int: Double]) {
         
+        
+    }
+    
+    func toggleInfo() {
+        self.isInfoShown = !self.isInfoShown
+        if self.isInfoShown {
+            self.addChild(self.customInfoEntity!)
+        } else {
+            self.removeChild(self.customInfoEntity!)
+        }
+    }
+    
+    required init() {
+        super.init()
+    }
+}
+
+class ARInfoNode: Entity, HasAnchoring, HasModel {
+    convenience init(name: String) {
+        self.init()
+        do {
+            var customViewMaterial = SimpleMaterial()
+            let infoView = ARNodeInfomationView()
+            customViewMaterial.baseColor = try MaterialColorParameter.texture(
+                .generate(
+                    from: infoView.snapshot()!,
+                    options: TextureResource.CreateOptions(
+                        semantic: nil,
+                        mipmapsMode: .allocateAndGenerateAll
+                    )
+                ))
+            self.model = ModelComponent(
+                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
+                materials: [customViewMaterial]
+            )
+            self.name = name
+        } catch {
+            fatalError()
+        }
     }
     
     required init() {

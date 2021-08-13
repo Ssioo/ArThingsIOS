@@ -182,7 +182,7 @@ struct ARViewContainer: UIViewRepresentable {
         guard let map = data.worldMap else { return }
         config.initialWorldMap = map
         
-        self.arView.session.run(config, options: [.removeExistingAnchors, .resetSceneReconstruction, .resetTracking])
+        self.arView.session.run(config, options: [.removeExistingAnchors, .resetSceneReconstruction])
 
         anchors.forEach { anchor in
             self.addElement(pos: anchor.pos.toSIMD())
@@ -200,21 +200,18 @@ struct ARViewContainer: UIViewRepresentable {
                 },
                 onRes: { res in
                     debugPrint(res)
-                    var maxWatt = 0.0
-                    var sumWatt = 0.0
-            
-                    res.forEach { key, value in
-                        if value > maxWatt {
-                            maxWatt = value
-                        }
-                        sumWatt = sumWatt + value
-                    }
-                    let avgWatt = sumWatt / 24
-                    node.updateData(newData: "SUM: \(sumWatt)W, MAX: \(maxWatt)W, AVG: \(avgWatt)Wh")
+                    node.updateData(newData: res)
                 }
             )
         }
-        let greenBoxAnchor = ARNode(pos: pos, onTapNode: onTap, onTapInfo: nil)
+        let greenBoxAnchor = ARNode(
+            pos: pos,
+            onTapNode: { node in
+                node.toggleInfo()
+                
+            },
+            onTapInfo: onTap
+        )
         self.arView.scene.anchors.append(greenBoxAnchor)
         self.vm.addAnchor(anchor: greenBoxAnchor, pos: pos) { node in
             node.removeFromParent()
