@@ -11,5 +11,5 @@ class BaseViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var isShowAlert: Bool = false
     @Published var alertObject: AlertObject? = nil
-    
+    @Published var progress: Double = 0.0
 }

@@ -12,8 +12,8 @@ import ARKit
 
 class ARNodeInfomationView: UIView {
     
-    let wattTextView: UILabel = {
-        let container = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 20))
+    let totalWattTextView: UILabel = {
+        let container = UILabel(frame: CGRect(x: 0, y: 20, width: 80, height: 30))
         container.translatesAutoresizingMaskIntoConstraints = false
         container.textAlignment = .center
         container.textColor = .black
@@ -30,6 +30,14 @@ class ARNodeInfomationView: UIView {
         return circle
     }()
     
+    let maxWattTextView: UILabel = {
+        let container = UILabel(frame: CGRect(x: 0, y: 20, width: 80, height: 30))
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.textAlignment = .center
+        container.textColor = .black
+        return container
+    }()
+    
     let maxWattCircle: UIView = {
         let circle = UIView(frame: CGRect(x: 118, y: 18, width: 64, height: 64))
         circle.layer.cornerRadius = 32
@@ -37,6 +45,13 @@ class ARNodeInfomationView: UIView {
         circle.layer.shadowRadius = 7
         circle.layer.backgroundColor = UIColor(Color(red: 0.9, green: 0.25, blue: 0.25, opacity: 0.38)).cgColor
         return circle
+    }()
+    
+    let avgWattTextView: UILabel = {
+        let container = UILabel(frame: CGRect(x: 0, y: 20, width: 80, height: 30))
+        container.textAlignment = .center
+        container.textColor = .black
+        return container
     }()
     
     let avgWattCircle: UIView = {
@@ -48,8 +63,19 @@ class ARNodeInfomationView: UIView {
         return circle
     }()
     
-    func updateNewData(havData: [Int: Double]) {
-        
+    func updateNewData(havData: [Int: Double]) -> ARNodeInfomationView {
+        var sum = 0.0
+        var max = 0.0
+        havData.forEach { time, value in
+            if value > max {
+                max = value
+            }
+            sum = sum + value
+        }
+        self.totalWattTextView.text = "\(String(format: "%.2f", sum / 1000.0 / 1000.0))W"
+        self.maxWattTextView.text = "\(String(format: "%.1f", max / 1000.0))mW"
+        self.avgWattTextView.text = "\(String(format: "%.1f", sum / 24.0 / 1000.0))mWh"
+        return self
     }
     
     override init(frame: CGRect) {
@@ -63,7 +89,9 @@ class ARNodeInfomationView: UIView {
         self.addSubview(totalWattCircle)
         self.addSubview(maxWattCircle)
         self.addSubview(avgWattCircle)
-        //totalWattCircle.addSubview(wattTextView)
+        totalWattCircle.addSubview(totalWattTextView)
+        avgWattCircle.addSubview(avgWattTextView)
+        maxWattCircle.addSubview(maxWattTextView)
     }
     
     required init?(coder: NSCoder) {

@@ -44,6 +44,7 @@
 		976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B824D26B6FED3000D403B /* ARViewModel.swift */; };
 		976B825226B75D25000D403B /* ApiModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976B825126B75D25000D403B /* ApiModule.swift */; };
 		97736143260C71FA0070043E /* ExternalAccessory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 97736142260C71FA0070043E /* ExternalAccessory.framework */; };
+		FBD6764726CAB82D00795AEA /* LoadingProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD6764626CAB82D00795AEA /* LoadingProgressView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +108,7 @@
 		976B825126B75D25000D403B /* ApiModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiModule.swift; sourceTree = "<group>"; };
 		9773613D260C71EC0070043E /* ar_sample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ar_sample.entitlements; sourceTree = "<group>"; };
 		97736142260C71FA0070043E /* ExternalAccessory.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExternalAccessory.framework; path = System/Library/Frameworks/ExternalAccessory.framework; sourceTree = SDKROOT; };
+		FBD6764626CAB82D00795AEA /* LoadingProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingProgressView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -226,6 +228,7 @@
 				97249A5626BB79FD00B895DD /* ARNode.swift */,
 				97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */,
 				97249A5C26BD03A300B895DD /* PickerSheetView.swift */,
+				FBD6764626CAB82D00795AEA /* LoadingProgressView.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				97249A5726BB79FD00B895DD /* ARNode.swift in Sources */,
 				9766D054260ABD55006801B2 /* Experience.rcproject in Sources */,
 				976B825226B75D25000D403B /* ApiModule.swift in Sources */,
+				FBD6764726CAB82D00795AEA /* LoadingProgressView.swift in Sources */,
 				97249A5F26BD248100B895DD /* RemoteFileGenerator.swift in Sources */,
 				976B824A26B6FCB5000D403B /* AlertView.swift in Sources */,
 				976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */,

@@ -20,6 +20,7 @@ struct ContentView : View {
             )
             ARContentView(vm: vm)
             LoadingView(isLoading: $vm.isLoading)
+            LoadingProgressView(isLoading: $vm.isLoading, progress: $vm.progress)
         }
         .edgesIgnoringSafeArea(.all)
     }

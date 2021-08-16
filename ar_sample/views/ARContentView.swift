@@ -33,6 +33,8 @@ struct ARContentView: View {
                 currentRoom = value
                 vm.currentRoom = value
                 vm.isLoading = true
+                
+                // Check if selected AR Map has already scanned data ?
                 vm.fetchARRoomsDataIndicesById(id: currentRoom) { arData, anchors in
                     vm.isLoading = false
                     hasFullScannedMap = arData != nil
@@ -65,20 +67,46 @@ struct ARContentView: View {
                             } else {
                                 debugPrint("Saving...")
                                 vm.isLoading = true
-                                arViewContainer.saveMap(currentRoom: currentRoom) {
-                                    vm.isLoading = false
-                                    vm.alertObject = AlertObject(
-                                        title: "Success",
-                                        message: "Success to Save world to remote",
-                                        onOk: {},
-                                        onNo: nil
-                                    )
-                                    vm.isShowAlert = true
+                                // First, extract current ARMap from ARViewContainer's ARView's session
+                                arViewContainer.saveMap(currentRoom: currentRoom) { res in
+                                    if !res {
+                                        // Failed
+                                        vm.isLoading = false
+                                        return
+                                    }
+                                    // Second, save extracted ARMap in ARViewModel to (Mobed ML) Server
+                                    vm.saveCurrentWorldDataToRemote(currentRoom: currentRoom) { res in
+                                        debugPrint("All cleard")
+                                        vm.isLoading = false
+                                        vm.alertObject = AlertObject(
+                                            title: res ? "Success" : "Failure",
+                                            message: "\(res ? "Success" : "Failed") to Save world to remote",
+                                            onOk: {
+                                                // Third, Reload full AR Rooms
+                                                vm.fetchARRooms {
+                                                    self.arRooms = $0
+                                                }
+                                                // Fourth, Reload current AR Map (Still in test)
+                                                vm.fetchARRoomsDataIndicesById(id: $currentRoom.wrappedValue) { res, anchors in
+                                                    vm.isLoading = false
+                                                    guard let data = res else {
+                                                        hasFullScannedMap = false
+                                                        return
+                                                    }
+                                                    hasFullScannedMap = true
+                                                    arViewContainer.reset(data: data, anchors: anchors)
+                                                }
+                                            },
+                                            onNo: nil
+                                        )
+                                        vm.isShowAlert = true
+                                    }
                                 }
                             }
                             
                         }, label: { LoadOrSaveButtonText(toLoad: $hasFullScannedMap) })
                         Button(action: {
+                            // On Every show up pickerView, fetch All ARRooms' indicies to latest data
                             vm.isLoading = true
                             vm.fetchARRooms {
                                 vm.isLoading = false
@@ -139,14 +167,21 @@ struct ARViewContainer: UIViewRepresentable {
     func updateUIView(_ uiView: ARView, context: Context) {}
     
     
-    func saveMap(currentRoom: String, onFinish: (() -> Void)? = nil) {
+    func saveMap(currentRoom: String, onFinish: ((Bool) -> Void)? = nil) {
         arView.session.getCurrentWorldMap { worldMap, error in
-            guard let map = worldMap else { return }
-            guard let frame = self.arView.session.currentFrame else { return }
+            guard let map = worldMap else {
+                onFinish?(false)
+                return
+            }
+            guard let frame = self.arView.session.currentFrame else {
+                onFinish?(false)
+                return
+            }
             
             let meshes = frame.extractMesh()
             self.vm.saveMap(features: map.rawFeaturePoints, meshes: meshes, map: ARData(worldMap: map))
-            self.vm.saveCurrentWorldDataToRemote(currentRoom: currentRoom, onFinish: onFinish)
+            onFinish?(true)
+            //self.vm.saveCurrentWorldDataToRemote(currentRoom: currentRoom, onFinish: onFinish)
         }
     }
     
@@ -167,8 +202,14 @@ struct ARViewContainer: UIViewRepresentable {
         ))
         
     }
+
     
     func reset(data: ARData, anchors: [RemoteARAnchor]) {
+        debugPrint("How many calls of reset")
+        vm.anchors.forEach { anchor, pos in
+            anchor.removeFromParent()
+        }
+        self.vm.anchors.removeAll()
         self.arView.session.pause()
         
         let config = ARWorldTrackingConfiguration()
@@ -179,7 +220,9 @@ struct ARViewContainer: UIViewRepresentable {
         
         self.arView.debugOptions.insert(.showWorldOrigin)
         self.arView.debugOptions.insert(.showSceneUnderstanding)
-        guard let map = data.worldMap else { return }
+        guard let map = data.worldMap else {
+            fatalError()
+        }
         config.initialWorldMap = map
         
         self.arView.session.run(config, options: [.removeExistingAnchors, .resetSceneReconstruction])
@@ -191,24 +234,41 @@ struct ARViewContainer: UIViewRepresentable {
     
     func addElement(pos: SIMD3<Float>) {
         let onTap: (ARNode) -> Void = { node in
-            
-            // TODO: Harvesting 데이터 연결
-            self.vm.getSolacleHarvDataAt(
-                pos: pos,
-                onPogress: { progress in
-                    debugPrint(progress)
+            vm.alertObject = AlertObject(
+                title: "Delete Node",
+                message: "Do you want to remove this node from server?",
+                onOk: {
+                    vm.isLoading = true
+                    self.vm.deleteNode(node: node) { res in
+                        vm.isLoading = false
+                        vm.alertObject = AlertObject(
+                            title: "Success",
+                            message: "Success To Remove Node",
+                            onOk: {},
+                            onNo: nil)
+                        vm.isShowAlert = true
+                    }
                 },
-                onRes: { res in
-                    debugPrint(res)
-                    node.updateData(newData: res)
-                }
-            )
+                onNo: {})
+            vm.isShowAlert = true
         }
         let greenBoxAnchor = ARNode(
             pos: pos,
             onTapNode: { node in
                 node.toggleInfo()
-                
+                // Harvesting 데이터 연결
+                self.vm.isLoading = true
+                self.vm.getSolacleHarvDataAt(
+                    pos: pos,
+                    onPogress: { progress in
+                        vm.progress = progress
+                    },
+                    onRes: { res in
+                        self.vm.isLoading = false
+                        debugPrint(res)
+                        node.updateData(newData: res)
+                    }
+                )
             },
             onTapInfo: onTap
         )

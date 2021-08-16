@@ -130,6 +130,21 @@ class ARViewModel: BaseViewModel {
             )
     }
     
+    func deleteNode(node: ARNode, onFinish: ((Bool) -> Void)? = nil) {
+        let lastPos = self.anchors.removeValue(forKey: node)
+        self.updateAnchorsToRemote(
+            currentRoomPath: self.currentRoom,
+            onFail: {
+                self.anchors[node] = lastPos
+                onFinish?(false)
+            },
+            onSuccess: {
+                onFinish?(true)
+                node.removeFromParent()
+            }
+        )
+    }
+    
     
     func createNewARRoom() {
         let newARRoomId = UUID.init().uuidString
@@ -163,10 +178,13 @@ class ARViewModel: BaseViewModel {
         )
     }
     
-    func saveCurrentWorldDataToRemote(currentRoom: String, onFinish: (() -> Void)? = nil) -> Bool {
+    func saveCurrentWorldDataToRemote(currentRoom: String, onFinish: ((Bool) -> Void)? = nil) {
         // file 생성
         let currentRoomPath = currentRoom
-        if currentRoom == "" { return false }
+        if currentRoom == "" {
+            onFinish?(false)
+            return
+        }
         let time = Date().timeIntervalSince1970
         let usdPath = "\(time).usd"
         let objPath = "\(time).obj"
@@ -181,7 +199,8 @@ class ARViewModel: BaseViewModel {
             do {
                 try self.lastMeshes?.export(to: urlUSD)
             } catch {
-                fatalError()
+                onFinish?(false)
+                return
             }
         }
         if MDLAsset.canExportFileExtension("usd") {
@@ -192,7 +211,9 @@ class ARViewModel: BaseViewModel {
                 
                 var cleared: [Bool] = [false, false, false]
                 
-                guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else { return false }
+                guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else {
+                    onFinish?(false)
+                    return }
         
                 
                 // Meshes
@@ -208,9 +229,11 @@ class ARViewModel: BaseViewModel {
                             "path": "arthings/\(currentRoomPath)/\(objPath)"
                         ],
                         onRes: { res in
-                            cleared[1] = true
+                            cleared[0] = true
+                            debugPrint(cleared)
                             if cleared.allSatisfy({ $0 == true }) {
-                                onFinish?()
+                            
+                                onFinish?(true)
                             }
                         }
                     )
@@ -229,8 +252,9 @@ class ARViewModel: BaseViewModel {
                         ],
                         onRes: { res in
                             cleared[1] = true
+                            debugPrint(cleared)
                             if cleared.allSatisfy({ $0 == true }) {
-                                onFinish?()
+                                onFinish?(true)
                             }
                         }
                     )
@@ -248,8 +272,9 @@ class ARViewModel: BaseViewModel {
                         ],
                         onRes: { res in
                             cleared[2] = true
+                            debugPrint(cleared)
                             if cleared.allSatisfy({ $0 == true }) {
-                                onFinish?()
+                                onFinish?(true)
                             }
                         }
                     )
@@ -259,10 +284,9 @@ class ARViewModel: BaseViewModel {
         } else {
             fatalError("Can't export OBJ")
         }
-        return true
     }
     
-    func updateAnchorsToRemote(currentRoomPath: String, onFail: (() -> Void)? = nil) {
+    func updateAnchorsToRemote(currentRoomPath: String, onFail: (() -> Void)? = nil, onSuccess: (() -> Void)? = nil) {
         // Indexing
         guard let lastMap = self.lastSavedARRemoteData else {
             debugPrint("No Map")
@@ -284,6 +308,7 @@ class ARViewModel: BaseViewModel {
                 onRes: { res in
                     self.isLoading = false
                     debugPrint(res)
+                    onSuccess?()
                 }
             )
     }

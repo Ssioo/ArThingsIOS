@@ -25,13 +25,21 @@ class ARCoordinator: NSObject {
             return
         }
         
-        guard let buttonTapped = container.arView.entity(at: touchInView) as? ARNode else {
+        let tappedObj = container.arView.entity(at: touchInView)
+        if tappedObj is ARInfoNode {
+            debugPrint("Click ARInfoNode!")
+            let parent = (tappedObj as! ARInfoNode).parent as! ARNode
+            parent.onTapInfo?(parent)
+        } else if tappedObj is ARNode {
+            debugPrint("Click ARNode!")
+            (tappedObj as! ARNode).onTapNode?(tappedObj as! ARNode)
+        } else {
             // Add New Node
             let hitTestResult = container.arView.hitTest(touchInView, types: .existingPlane)
             guard let firstHitWTC = hitTestResult.first else { return }
             let x = firstHitWTC.worldTransform.columns.3.x
             let y  = firstHitWTC.worldTransform.columns.3.y
-            let z = firstHitWTC.worldTransform.columns.3.z + 0.1
+            let z = firstHitWTC.worldTransform.columns.3.z
 
             container.vm.alertObject = AlertObject(
                 title: "Add Node",
@@ -42,9 +50,28 @@ class ARCoordinator: NSObject {
                 onNo: {}
             )
             container.vm.isShowAlert = true
-            return
         }
-        buttonTapped.onTapNode?(buttonTapped)
+        
+//        guard let buttonTapped = container.arView.entity(at: touchInView) as? ARNode else {
+//            // Add New Node
+//            let hitTestResult = container.arView.hitTest(touchInView, types: .existingPlane)
+//            guard let firstHitWTC = hitTestResult.first else { return }
+//            let x = firstHitWTC.worldTransform.columns.3.x
+//            let y  = firstHitWTC.worldTransform.columns.3.y
+//            let z = firstHitWTC.worldTransform.columns.3.z
+//
+//            container.vm.alertObject = AlertObject(
+//                title: "Add Node",
+//                message: "Do you want to place virtual node here?",
+//                onOk: {
+//                    self.container.addElement(pos: [x, y, z])
+//                },
+//                onNo: {}
+//            )
+//            container.vm.isShowAlert = true
+//            return
+//        }
+//        buttonTapped.onTapNode?(buttonTapped)
     }
 }
 

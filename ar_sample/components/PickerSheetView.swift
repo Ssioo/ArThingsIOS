@@ -31,9 +31,9 @@ struct PickerSheetView: View {
                             .padding(.top, 5)
                         Picker("Picker", selection: $selectedObj) {
                             ForEach(objs, id: \.self) {
-                                Text($0)
+                                Text($0).foregroundColor(.black)
                             }
-                            Text("Create Room").tag("New")
+                            Text("Create Room").tag("New").foregroundColor(.black)
                         }.labelsHidden()
                             .pickerStyle(WheelPickerStyle())
                     }.background(RoundedRectangle(cornerRadius: 10)

@@ -25,9 +25,11 @@ class ARNode: Entity, HasAnchoring {
         self.transform = Transform()
         self.onTapNode = onTapNode
         self.onTapInfo = onTapInfo
+        self.name = uniqueId
+        self.position = pos
+        
         let loadedModel: Entity
         do {
-            
             loadedModel = try Entity.load(named: "solar_panels_stylized")
             loadedModel.scale = [0.0003, 0.0003, 0.0003]
             debugPrint(loadedModel)
@@ -44,24 +46,16 @@ class ARNode: Entity, HasAnchoring {
         
         
         self.customInfoEntity = ARInfoNode(name: "\(uniqueId)_InfoNode")
-        self.customInfoEntity?.setPosition([0, 0.1, 0], relativeTo: self)
-        //self.addChild(self.customInfoEntity!)
         
         self.components[CollisionComponent] = CollisionComponent(
             shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
             mode: .trigger,
             filter: .sensor
         )
-        
-        
-        //self.generateCollisionShapes(recursive: true)
-        self.name = uniqueId
-        self.position = pos
-        
     }
     
     func updateData(newData: [Int: Double]) {
-        
+        self.customInfoEntity?.updateViewWithHarvData(data: newData)
         
     }
     
@@ -69,6 +63,7 @@ class ARNode: Entity, HasAnchoring {
         self.isInfoShown = !self.isInfoShown
         if self.isInfoShown {
             self.addChild(self.customInfoEntity!)
+            self.customInfoEntity?.setPosition([0, 0.1, 0], relativeTo: self)
         } else {
             self.removeChild(self.customInfoEntity!)
         }
@@ -80,14 +75,16 @@ class ARNode: Entity, HasAnchoring {
 }
 
 class ARInfoNode: Entity, HasAnchoring, HasModel {
+    var lastInfoView: ARNodeInfomationView? = nil
+    
     convenience init(name: String) {
         self.init()
         do {
             var customViewMaterial = SimpleMaterial()
-            let infoView = ARNodeInfomationView()
+            lastInfoView = ARNodeInfomationView()
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: infoView.snapshot()!,
+                    from: lastInfoView!.snapshot()!,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
@@ -101,6 +98,29 @@ class ARInfoNode: Entity, HasAnchoring, HasModel {
         } catch {
             fatalError()
         }
+    }
+    
+    func updateViewWithHarvData(data: [Int: Double]) {
+        do {
+            var customViewMaterial = SimpleMaterial()
+            lastInfoView = lastInfoView?.updateNewData(havData: data)
+            customViewMaterial.baseColor = try MaterialColorParameter.texture(
+                .generate(
+                    from: lastInfoView!.snapshot()!,
+                    options: TextureResource.CreateOptions(
+                        semantic: nil,
+                        mipmapsMode: .allocateAndGenerateAll
+                    )
+                ))
+            self.model = ModelComponent(
+                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
+                materials: [customViewMaterial]
+            )
+            self.name = name
+        } catch {
+            fatalError()
+        }
+        
     }
     
     required init() {
