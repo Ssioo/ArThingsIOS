@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		68A6DEDF0074EC2865003A85 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A6D543279F19835B2CB645 /* Node.swift */; };
+		97041BEB26D486B400778965 /* ARButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97041BEA26D486B400778965 /* ARButton.swift */; };
 		9718717126C38F0E001CE29E /* ios_launcher_152.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716326C38F0E001CE29E /* ios_launcher_152.png */; };
 		9718717226C38F0E001CE29E /* ios_launcher_80.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716426C38F0E001CE29E /* ios_launcher_80.png */; };
 		9718717326C38F0E001CE29E /* ios_launcher_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716526C38F0E001CE29E /* ios_launcher_180.png */; };
@@ -66,6 +67,7 @@
 
 /* Begin PBXFileReference section */
 		68A6D543279F19835B2CB645 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
+		97041BEA26D486B400778965 /* ARButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARButton.swift; sourceTree = "<group>"; };
 		9718716326C38F0E001CE29E /* ios_launcher_152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_152.png; sourceTree = "<group>"; };
 		9718716426C38F0E001CE29E /* ios_launcher_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_80.png; sourceTree = "<group>"; };
 		9718716526C38F0E001CE29E /* ios_launcher_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_180.png; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				97249A5826BB7B0700B895DD /* ARNodeInfomation.swift */,
 				97249A5C26BD03A300B895DD /* PickerSheetView.swift */,
 				FBD6764626CAB82D00795AEA /* LoadingProgressView.swift */,
+				97041BEA26D486B400778965 /* ARButton.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -445,6 +448,7 @@
 				9766D052260ABD55006801B2 /* ContentView.swift in Sources */,
 				97249A5926BB7B0700B895DD /* ARNodeInfomation.swift in Sources */,
 				9766D050260ABD55006801B2 /* AppDelegate.swift in Sources */,
+				97041BEB26D486B400778965 /* ARButton.swift in Sources */,
 				976B824E26B6FED3000D403B /* ARViewModel.swift in Sources */,
 				97249A5526BB75D200B895DD /* LoadingView.swift in Sources */,
 				97249A5D26BD03A300B895DD /* PickerSheetView.swift in Sources */,

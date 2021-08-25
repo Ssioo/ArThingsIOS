@@ -20,6 +20,8 @@ class ARViewModel: BaseViewModel {
     
     var lastSavedARRemoteData: RemoteARMapIndex? = nil
     
+    var previousArButton: ARButton? = nil
+    
    override init() {
         super.init()
         self.fetchARRooms()

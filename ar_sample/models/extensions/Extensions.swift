@@ -45,6 +45,14 @@ extension Transform {
     }
 }
 
+extension SIMD3 where Scalar == Float {
+    func distanceTo(other: SIMD3<Float>) -> Float {
+        return sqrt(pow(self.x - other.x, 2) + pow(self.y - other.y, 2) + pow(self.z - other.z, 2))
+    }
+    
+
+}
+
 extension ARMeshGeometry {
     func vertex(at index: UInt32) -> (Float, Float, Float) {
         assert(vertices.format == MTLVertexFormat.float3, "Expected three floats (twelve bytes) per vertex.")
@@ -62,11 +70,17 @@ extension UIView {
         let uiImage = renderer.image { context in
             self.layer.render(in: context.cgContext)
         }
-        debugPrint("UIIMage", uiImage)
-    
         guard let ciImage = CIImage(image: uiImage) else { return nil }
-        debugPrint("CIImage", ciImage)
         return CIContext(options: nil).createCGImage(ciImage, from: ciImage.extent)
+    }
+}
+
+extension View {
+    func snapshot(size: CGSize) -> CGImage? {
+        let controller = UIHostingController(rootView: self)
+        controller.view.bounds = CGRect(origin: .zero, size: size)
+        let image = controller.view.snapshot()
+        return image
     }
 }
 
@@ -156,5 +170,38 @@ extension URL {
         } catch {
             return [:]
         }
+    }
+}
+
+extension Dictionary where Key == Int, Value == Double {
+    func toLinePos() -> [LinePointPos] {
+        var max = 0.0
+        var min = 100000.0
+        forEach { key, value in
+            if value > max {
+                max = value
+            }
+            if value < min {
+                min = value
+            }
+        }
+        let res = map { key, value in
+            LinePointPos(pos: value / abs(max - min))
+        }
+        debugPrint(self)
+        debugPrint(res)
+        return res
+    }
+}
+
+extension Entity {
+    func lookatMe(_ me: SIMD3<Float>, up: SIMD3<Float>? = nil) {
+        if up != nil {
+            self.look(at: me, from: self.position(relativeTo: nil), upVector: up!, relativeTo: nil)
+        } else {
+            self.look(at: me, from: self.position(relativeTo: nil), relativeTo: nil)
+            
+        }
+        
     }
 }

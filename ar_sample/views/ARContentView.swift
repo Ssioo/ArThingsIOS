@@ -200,6 +200,13 @@ struct ARViewContainer: UIViewRepresentable {
             target: context.coordinator,
             action: #selector(context.coordinator.handleTap(_:))
         ))
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(
+            target: context.coordinator,
+            action: #selector(context.coordinator.handleLongPress(_:))
+        )
+        longPressGestureRecognizer.numberOfTouchesRequired = 2
+        longPressGestureRecognizer.allowableMovement = 600
+        arView.addGestureRecognizer(longPressGestureRecognizer)
         
     }
 
@@ -213,17 +220,21 @@ struct ARViewContainer: UIViewRepresentable {
         self.arView.session.pause()
         
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal, .vertical]
-        config.sceneReconstruction = .meshWithClassification
-        config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+        
+        
         
         
         self.arView.debugOptions.insert(.showWorldOrigin)
         self.arView.debugOptions.insert(.showSceneUnderstanding)
+        self.arView.debugOptions.insert(.showPhysics)
+
         guard let map = data.worldMap else {
             fatalError()
         }
         config.initialWorldMap = map
+        config.planeDetection = [.horizontal, .vertical]
+        config.sceneReconstruction = .meshWithClassification
+        config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
         
         self.arView.session.run(config, options: [.removeExistingAnchors, .resetSceneReconstruction])
 
@@ -232,8 +243,30 @@ struct ARViewContainer: UIViewRepresentable {
         }
     }
     
+    func addButton(pos: SIMD3<Float>, text: String) {
+        self.vm.previousArButton?.removeFromParent()
+        let buttonNode = ARButton(text: text, pos: pos) { node in
+            self.vm.alertObject = AlertObject(
+                title: "Add Node",
+                message: "Do you want to place virtual node here?",
+                onOk: {
+                    self.addElement(pos: pos)
+                    node.removeFromParent()
+                },
+                onNo: {
+                    node.removeFromParent()
+                }
+            )
+            self.vm.isShowAlert = true
+        }
+        self.arView.scene.addAnchor(buttonNode)
+        buttonNode.position = pos
+        
+        self.vm.previousArButton = buttonNode
+    }
+    
     func addElement(pos: SIMD3<Float>) {
-        let onTap: (ARNode) -> Void = { node in
+        let onTapInfo: (ARNode) -> Void = { node in
             vm.alertObject = AlertObject(
                 title: "Delete Node",
                 message: "Do you want to remove this node from server?",
@@ -252,7 +285,7 @@ struct ARViewContainer: UIViewRepresentable {
                 onNo: {})
             vm.isShowAlert = true
         }
-        let greenBoxAnchor = ARNode(
+        let arNode = ARNode(
             pos: pos,
             onTapNode: { node in
                 node.toggleInfo()
@@ -270,10 +303,13 @@ struct ARViewContainer: UIViewRepresentable {
                     }
                 )
             },
-            onTapInfo: onTap
+            onTapInfo: onTapInfo
         )
-        self.arView.scene.anchors.append(greenBoxAnchor)
-        self.vm.addAnchor(anchor: greenBoxAnchor, pos: pos) { node in
+        //let installedNode = self.arView.installGestures(.translation, for: arNode)
+        //let installedTransNode = installedNode.first as? EntityTranslationGestureRecognizer
+        
+        self.arView.scene.anchors.append(arNode)
+        self.vm.addAnchor(anchor: arNode, pos: pos) { node in
             node.removeFromParent()
         }
     }

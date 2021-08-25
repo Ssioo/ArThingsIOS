@@ -10,7 +10,7 @@ import RealityKit
 import SwiftUI
 import ARKit
 
-class ARNode: Entity, HasAnchoring {
+class ARNode: Entity, HasAnchoring, HasCollision {
     var onTapNode: ((ARNode) -> Void)? = nil
     var onTapInfo: ((ARNode) -> Void)? = nil
     var isInfoShown: Bool = false
@@ -44,14 +44,14 @@ class ARNode: Entity, HasAnchoring {
         self.nodeEntity?.name = "\(uniqueId)_VirtualNode"
         self.addChild(self.nodeEntity!)
         
-        
-        self.customInfoEntity = ARInfoNode(name: "\(uniqueId)_InfoNode")
+        self.customInfoEntity = ARInfoNode(parent: self, name: "\(uniqueId)_InfoNode")
         
         self.components[CollisionComponent] = CollisionComponent(
             shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
             mode: .trigger,
             filter: .sensor
         )
+        self.generateCollisionShapes(recursive: false)
     }
     
     func updateData(newData: [Int: Double]) {
@@ -62,10 +62,14 @@ class ARNode: Entity, HasAnchoring {
     func toggleInfo() {
         self.isInfoShown = !self.isInfoShown
         if self.isInfoShown {
+ //           let arNodePos = self.position
             self.addChild(self.customInfoEntity!)
+//            self.scene?.addAnchor(self.customInfoEntity!)
+//            self.customInfoEntity?.setPosition([arNodePos.x, arNodePos.y + 0.1, arNodePos.z], relativeTo: nil)
             self.customInfoEntity?.setPosition([0, 0.1, 0], relativeTo: self)
         } else {
-            self.removeChild(self.customInfoEntity!)
+//            self.scene?.removeAnchor(self.customInfoEntity!)
+            self.customInfoEntity?.removeFromParent()
         }
     }
     
@@ -74,25 +78,33 @@ class ARNode: Entity, HasAnchoring {
     }
 }
 
-class ARInfoNode: Entity, HasAnchoring, HasModel {
-    var lastInfoView: ARNodeInfomationView? = nil
+class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
+    var lastInfoView: ARNodeInformationSwiftUIView? = nil
+    var parentNode: ARNode? = nil
     
-    convenience init(name: String) {
+    convenience init(parent: ARNode, name: String) {
         self.init()
+        self.parentNode = parent
+        self.transform = parent.transform
         do {
             var customViewMaterial = SimpleMaterial()
-            lastInfoView = ARNodeInfomationView()
+            lastInfoView = ARNodeInformationSwiftUIView(harvData: [:])
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: lastInfoView!.snapshot()!,
+                    from: lastInfoView!.snapshot(size: CGSize(width: 300, height: 200))!,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
                     )
                 ))
             self.model = ModelComponent(
-                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
+                mesh: .generateBox(size: [0.3, 0.2, 0.001]),
                 materials: [customViewMaterial]
+            )
+            self.components[CollisionComponent] = CollisionComponent(
+                shapes: [.generateBox(size: [0.3, 0.2, 0.001])],
+                mode: .trigger,
+                filter: .sensor
             )
             self.name = name
         } catch {
@@ -103,10 +115,14 @@ class ARInfoNode: Entity, HasAnchoring, HasModel {
     func updateViewWithHarvData(data: [Int: Double]) {
         do {
             var customViewMaterial = SimpleMaterial()
-            lastInfoView = lastInfoView?.updateNewData(havData: data)
+            lastInfoView = ARNodeInformationSwiftUIView(harvData: data)
+            let snapShot = lastInfoView!.uiImage()!
+            let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let filePath = dir.appendingPathComponent("infoView.png")
+            try UIImage(cgImage: snapShot).pngData()?.write(to: filePath)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: lastInfoView!.snapshot()!,
+                    from: snapShot,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
