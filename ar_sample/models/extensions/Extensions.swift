@@ -185,12 +185,11 @@ extension Dictionary where Key == Int, Value == Double {
                 min = value
             }
         }
-        let res = map { key, value in
-            LinePointPos(pos: value / abs(max - min))
+        var res = map { key, value in
+            (key, LinePointPos(pos: value / abs(max - min)))
         }
-        debugPrint(self)
-        debugPrint(res)
-        return res
+        res.sort(by: {$0.0 < $1.0})
+        return res.map { $0.1 }
     }
 }
 

@@ -15,8 +15,6 @@ import QuickLook
 class ARCoordinator: NSObject {
     var container: ARViewContainer
     var centerPoint: CGPoint? = nil
-    //var centerPointLeft10: CGPoint? = nil
-    //var centerPointBottom10: CGPoint? = nil
     
     init(_ container: ARViewContainer) {
         self.container = container
@@ -48,41 +46,79 @@ class ARCoordinator: NSObject {
         }
     }
     
-    var isMoving = false
-    var tempARNode: ARNode? = nil
+    var hasCapturedARNode = false
+    var capturedARNode: ARNode? = nil
     var lock = false
-    
+    var isUpdatingHarvDataOfCapturedARNode = false
     
     @objc func handleLongPress(_ sender: UILongPressGestureRecognizer? = nil) {
-        if lock { return }
-        lock = true
+        if self.lock { return }
+        self.lock = true
         if sender?.state == UIGestureRecognizer.State.began || sender?.state == UIGestureRecognizer.State.changed {
 
             // Create Virtual Node in center of the view
-            if !self.isMoving {
+            if !self.hasCapturedARNode {
+                guard let arNode = container.arView.entity(at: centerPoint!) as? ARNode else {
+                    container.vm.alertObject = AlertObject(
+                        title: "No ARNode Here",
+                        message: "There is no ARNode to select in here. Try Again", onOk: {
+                            self.lock = false
+                        },
+                        onNo: nil)
+                    
+                    container.vm.isShowAlert = true
+                    return
+                    
+                }
                 let raycastResult = container.arView.raycast(
                     from: centerPoint!,
                     allowing: .existingPlaneGeometry,
                     alignment: .any
                 )
-                
-                guard let firstRayCast = raycastResult.first else { return }
-                let pos = firstRayCast.worldTransform.position
-                self.isMoving = true
-                tempARNode = ARNode(pos: pos, onTapNode: nil, onTapInfo: nil)
-                self.container.arView.scene.addAnchor(tempARNode!)
-                tempARNode?.setPosition(pos, relativeTo: nil)
+                guard let firstRayCast = raycastResult.first else {
+                    self.lock = false
+                    return
+                }
+                self.hasCapturedARNode = true
+                self.capturedARNode = arNode
             }
         } else if (
             sender?.state == UIGestureRecognizer.State.ended
             || sender?.state == UIGestureRecognizer.State.cancelled
             || sender?.state == UIGestureRecognizer.State.failed
         ) {
-            self.isMoving = false
-            tempARNode?.removeFromParent()
-            tempARNode = nil
+            self.hasCapturedARNode = false
+            if self.capturedARNode != nil {
+                let lastPos = container.vm.anchors[self.capturedARNode!]
+                container.vm.anchors[self.capturedARNode!] = self.capturedARNode!.position(relativeTo: nil)
+                container.vm.updateAnchorsToRemote(
+                    currentRoomPath: container.vm.currentRoom,
+                    onFail: {
+                        self.container.vm.alertObject = AlertObject(
+                            title: "Update Fail",
+                            message: "Failed to update node's new location",
+                            onOk: {
+                                self.container.vm.anchors[self.capturedARNode!] = lastPos
+                                self.capturedARNode = nil
+                            },
+                            onNo: nil
+                        )
+                        self.container.vm.isShowAlert = true
+                    },
+                    onSuccess: {
+                        self.container.vm.alertObject = AlertObject(
+                            title: "Update Success",
+                            message: "Success to update node's new location",
+                            onOk: {
+                                self.capturedARNode = nil
+                            },
+                            onNo: nil
+                        )
+                        self.container.vm.isShowAlert = true
+                    })
+            }
         }
-        lock = false
+        self.lock = false
     }
 }
 
@@ -112,38 +148,26 @@ extension ARCoordinator: ARSessionDelegate {
                 infoEntity!.lookatMe(cameraPos)
             }
         }
-        
-        // Moving Temp Node Look me
-        if self.tempARNode != nil {
-            let centerRaycaseResult = container.arView.raycast(
+        if self.hasCapturedARNode {
+            let centerPointRaycastResult = container.arView.raycast(
                 from: centerPoint!,
-                allowing: .existingPlaneGeometry,
-                alignment: .any
-            )
-//            let centerLeft10RaycaseResult = container.arView.raycast(
-//                from: centerPointLeft10!,
-//                allowing: .existingPlaneGeometry,
-//                alignment: .any
-//            )
-//            let centerBottom10RaycaseResult = container.arView.raycast(
-//                from: centerPointBottom10!,
-//                allowing: .existingPlaneGeometry,
-//                alignment: .any
-//            )
-            guard let firstCenterRayCastResult = centerRaycaseResult.first else { return }
-//            guard let firstCenterLeft10RayCastResult = centerLeft10RaycaseResult.first else { return }
-//            guard let firstCenterBottom10RayCastResult = centerBottom10RaycaseResult.first else { return }
-//            let estimatedNormalVector = cross(
-//                firstCenterRayCastResult.worldTransform.position - firstCenterLeft10RayCastResult.worldTransform.position,
-//                firstCenterRayCastResult.worldTransform.position - firstCenterBottom10RayCastResult.worldTransform.position
-//            )
-
-            self.tempARNode!.setPosition(firstCenterRayCastResult.worldTransform.position, relativeTo: nil)
-            self.tempARNode!.lookatMe(cameraPos, up: [0, 1, 0])
-            //self.tempARNode?.setOrientation(.init(angle: Float.pi / 4.0 , axis: firstCenterRayCastResult.worldTransform.position), relativeTo: nil)
+                allowing: .estimatedPlane,
+                alignment: .any)
+            guard let firstCenterPointRaycastResult = centerPointRaycastResult.first else { return }
+            self.capturedARNode?.setPosition(firstCenterPointRaycastResult.worldTransform.position, relativeTo: nil)
+            if !self.isUpdatingHarvDataOfCapturedARNode {
+                self.isUpdatingHarvDataOfCapturedARNode = true
+                container.vm.getSolacleHarvDataAt(
+                    pos: firstCenterPointRaycastResult.worldTransform.position,
+                    onPogress: nil,
+                    onRes: {
+                        self.capturedARNode?.updateData(newData: $0)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            self.isUpdatingHarvDataOfCapturedARNode = false
+                        }
+                    })
+            }
         }
-        
-        //guard let centerObj = container.arView.entity(at: centerPoint!) as? ARNode else { return }
         
     }
     

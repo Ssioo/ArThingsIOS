@@ -21,9 +21,10 @@ class ARButton: Entity, HasAnchoring, HasCollision, HasModel {
         do {
             var customViewMaterial = SimpleMaterial()
             let view = ARButtonBase(btnText: text)
+            
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: view.snapshot(size: CGSize(width: 180, height: 40))!,
+                    from: view.uiImage()!,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
@@ -62,7 +63,6 @@ struct ARButtonBase: View {
                 .fill(.white)
             Text(btnText)
                 .foregroundColor(.black)
-                .font(.headline)
         }
         .frame(width: 180, height: 40, alignment: .center)
     }

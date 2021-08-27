@@ -47,6 +47,7 @@ struct ARContentView: View {
         
         return ZStack(alignment: .bottom) {
             arViewContainer
+            AimView()
             HStack(alignment: .bottom, spacing: 10) {
                 VStack(alignment: .center) {
                     CurrentRoomText(currentRoom: $currentRoom)
@@ -181,7 +182,6 @@ struct ARViewContainer: UIViewRepresentable {
             let meshes = frame.extractMesh()
             self.vm.saveMap(features: map.rawFeaturePoints, meshes: meshes, map: ARData(worldMap: map))
             onFinish?(true)
-            //self.vm.saveCurrentWorldDataToRemote(currentRoom: currentRoom, onFinish: onFinish)
         }
     }
     
@@ -221,12 +221,11 @@ struct ARViewContainer: UIViewRepresentable {
         
         let config = ARWorldTrackingConfiguration()
         
-        
-        
-        
         self.arView.debugOptions.insert(.showWorldOrigin)
         self.arView.debugOptions.insert(.showSceneUnderstanding)
         self.arView.debugOptions.insert(.showPhysics)
+        self.arView.environment.sceneUnderstanding.options = [.occlusion, .physics]
+
 
         guard let map = data.worldMap else {
             fatalError()
@@ -260,7 +259,7 @@ struct ARViewContainer: UIViewRepresentable {
             self.vm.isShowAlert = true
         }
         self.arView.scene.addAnchor(buttonNode)
-        buttonNode.position = pos
+        buttonNode.setPosition(pos, relativeTo: nil)
         
         self.vm.previousArButton = buttonNode
     }
@@ -286,7 +285,6 @@ struct ARViewContainer: UIViewRepresentable {
             vm.isShowAlert = true
         }
         let arNode = ARNode(
-            pos: pos,
             onTapNode: { node in
                 node.toggleInfo()
                 // Harvesting 데이터 연결
@@ -305,10 +303,9 @@ struct ARViewContainer: UIViewRepresentable {
             },
             onTapInfo: onTapInfo
         )
-        //let installedNode = self.arView.installGestures(.translation, for: arNode)
-        //let installedTransNode = installedNode.first as? EntityTranslationGestureRecognizer
         
         self.arView.scene.anchors.append(arNode)
+        arNode.setPosition(pos, relativeTo: nil)
         self.vm.addAnchor(anchor: arNode, pos: pos) { node in
             node.removeFromParent()
         }

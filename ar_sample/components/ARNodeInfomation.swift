@@ -13,40 +13,51 @@ import UIKit
 
 struct ARNodeInformationSwiftUIView: View {
     var harvData: [Int: Double]
+    var name: String
+    var battery: Double
     
     var body: some View {
-        
-        VStack {
-            LineChart(data: harvData.toLinePos())
-                .frame(width: 300, height: 100, alignment: .center)
-            ZStack {
-                let texts = generateInfoText(data: self.harvData)
-                ProgressCircle(
-                    progress:  0.3,
-                    src: texts.0,
-                    color: Color(.sRGB, red: 1.0, green: 0.0, blue: 0.0)
-                )
-                    .frame(width: 64, height: 64)
-                    .position(x: 50, y: 50)
-                ProgressCircle(
-                    progress:  0.6,
-                    src: texts.1,
-                    color: Color(.sRGB, red: 0.0, green: 0.0, blue: 1.0)
-                )
-                    .frame(width: 64, height: 64)
-                    .position(x: 150, y: 50)
-                ProgressCircle(
-                    progress:  0.6,
-                    src: texts.2,
-                    color: Color(.sRGB, red: 0.0, green: 1.0, blue: 0.0)
-                )
-                    .frame(width: 64, height: 64)
-                    .position(x: 250, y: 50)
-                
-            }
-            .frame(width: 300, height: 100, alignment: .center)
-        }.frame(width: 300, height: 200, alignment: .center)
+        let harvText = generateInfoText(data: harvData)
+        ZStack(alignment: .topTrailing) {
+            VStack(alignment: .center) {
+                Text(self.name)
+                    .font(.headline)
+                    .frame(width: nil, height: 30, alignment: .center)
+                LineChart(data: harvData.toLinePos())
+                    .frame(width: 280, height: 100, alignment: .center)
+                ZStack {
+                    ProgressCircle(
+                        progress:  0.3,
+                        src: harvText.0,
+                        color: Color(.sRGB, red: 1.0, green: 0.0, blue: 0.0)
+                    )
+                        .frame(width: 64, height: 64)
+                        .position(x: 40, y: 50)
+                    ProgressCircle(
+                        progress:  0.6,
+                        src: harvText.1,
+                        color: Color(.sRGB, red: 0.0, green: 0.0, blue: 1.0)
+                    )
+                        .frame(width: 64, height: 64)
+                        .position(x: 140, y: 50)
+                    ProgressCircle(
+                        progress:  0.6,
+                        src: harvText.2,
+                        color: Color(.sRGB, red: 0.0, green: 1.0, blue: 0.0)
+                    )
+                        .frame(width: 64, height: 64)
+                        .position(x: 240, y: 50)
+                    
+                }
+                .frame(width: 280, height: 100, alignment: .center)
+
+            }.frame(width: 280, height: 250, alignment: .center)
             .background(Color.white)
+            Battery(percentage: self.battery, color: .green)
+                .frame(width: 30, height: 10, alignment: .topTrailing)
+        }
+        .padding(10.0)
+        .border(.black, width: 1)
     }
     
     func generateInfoText(data: [Int: Double]) -> (String, String, String) {
@@ -81,6 +92,24 @@ struct ARNodeInformationSwiftUIView: View {
     }
 }
 
+struct Battery: View {
+    var percentage: CGFloat
+    var color: Color
+    
+    var body: some View {
+        ZStack(alignment: .center) {
+            HStack {
+                RoundedRectangle(cornerRadius: 2.0)
+                    .foregroundColor(self.color)
+                    .frame(width: 36, height: 10)
+            }
+            Text("\(String(format: "%.f", self.percentage * 100))")
+                .font(.caption2)
+        }.frame(width: 30, height: 10)
+        
+        
+    }
+}
 
 struct ProgressCircle: View {
     @State var progress: Double

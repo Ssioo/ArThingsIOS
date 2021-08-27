@@ -18,7 +18,7 @@ class ARNode: Entity, HasAnchoring, HasCollision {
     var nodeEntity: Entity? = nil
     var customInfoEntity: ARInfoNode? = nil
     
-    convenience init(pos: SIMD3<Float>, onTapNode: ((ARNode) -> Void)? = nil, onTapInfo: ((ARNode) -> Void)? = nil) {
+    convenience init(onTapNode: ((ARNode) -> Void)? = nil, onTapInfo: ((ARNode) -> Void)? = nil) {
         self.init()
         let uniqueId = UUID().uuidString
         
@@ -26,13 +26,16 @@ class ARNode: Entity, HasAnchoring, HasCollision {
         self.onTapNode = onTapNode
         self.onTapInfo = onTapInfo
         self.name = uniqueId
-        self.position = pos
         
-        let loadedModel: Entity
+        let loadedModel: ModelEntity
         do {
-            loadedModel = try Entity.load(named: "solar_panels_stylized")
+            loadedModel = try ModelEntity.loadModel(named: "solar_panels_stylized")
             loadedModel.scale = [0.0003, 0.0003, 0.0003]
-            debugPrint(loadedModel)
+            loadedModel.components[CollisionComponent] = CollisionComponent(
+                shapes: [.generateBox(size: [0.1, 0.1, 0.1])],
+                mode: .trigger,
+                filter: .sensor
+            )
         } catch {
             loadedModel = ModelEntity(
                 mesh: .generateBox(size: 0.1),
@@ -62,13 +65,10 @@ class ARNode: Entity, HasAnchoring, HasCollision {
     func toggleInfo() {
         self.isInfoShown = !self.isInfoShown
         if self.isInfoShown {
- //           let arNodePos = self.position
             self.addChild(self.customInfoEntity!)
-//            self.scene?.addAnchor(self.customInfoEntity!)
-//            self.customInfoEntity?.setPosition([arNodePos.x, arNodePos.y + 0.1, arNodePos.z], relativeTo: nil)
-            self.customInfoEntity?.setPosition([0, 0.1, 0], relativeTo: self)
+            //self.customInfoEntity?.setPosition([0, 0.3, 0], relativeTo: self.nodeEntity)
+            self.customInfoEntity?.position = [0, 0.3, 0]
         } else {
-//            self.scene?.removeAnchor(self.customInfoEntity!)
             self.customInfoEntity?.removeFromParent()
         }
     }
@@ -88,25 +88,26 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
         self.transform = parent.transform
         do {
             var customViewMaterial = SimpleMaterial()
-            lastInfoView = ARNodeInformationSwiftUIView(harvData: [:])
+            lastInfoView = ARNodeInformationSwiftUIView(harvData: [:], name: name, battery: 0.75)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: lastInfoView!.snapshot(size: CGSize(width: 300, height: 200))!,
+                    from: lastInfoView!.snapshot(size: CGSize(width: 300, height: 280))!,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
                     )
                 ))
             self.model = ModelComponent(
-                mesh: .generateBox(size: [0.3, 0.2, 0.001]),
+                mesh: .generateBox(size: [0.3, 0.28, 0.001]),
                 materials: [customViewMaterial]
             )
             self.components[CollisionComponent] = CollisionComponent(
-                shapes: [.generateBox(size: [0.3, 0.2, 0.001])],
+                shapes: [.generateBox(size: [0.3, 0.28, 0.001])],
                 mode: .trigger,
                 filter: .sensor
             )
             self.name = name
+            self.position = [0, 0.4, 0]
         } catch {
             fatalError()
         }
@@ -115,11 +116,8 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
     func updateViewWithHarvData(data: [Int: Double]) {
         do {
             var customViewMaterial = SimpleMaterial()
-            lastInfoView = ARNodeInformationSwiftUIView(harvData: data)
+            lastInfoView = ARNodeInformationSwiftUIView(harvData: data, name: lastInfoView!.name, battery: lastInfoView!.battery - 0.001)
             let snapShot = lastInfoView!.uiImage()!
-            let dir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let filePath = dir.appendingPathComponent("infoView.png")
-            try UIImage(cgImage: snapShot).pngData()?.write(to: filePath)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
                     from: snapShot,
@@ -129,7 +127,7 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
                     )
                 ))
             self.model = ModelComponent(
-                mesh: .generateBox(size: [0.3, 0.1, 0.001]),
+                mesh: .generateBox(size: [0.3, 0.28, 0.001]),
                 materials: [customViewMaterial]
             )
             self.name = name

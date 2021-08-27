@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		68A6DEDF0074EC2865003A85 /* Node.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68A6D543279F19835B2CB645 /* Node.swift */; };
 		97041BEB26D486B400778965 /* ARButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97041BEA26D486B400778965 /* ARButton.swift */; };
+		97041BED26D5E1D900778965 /* AimView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97041BEC26D5E1D900778965 /* AimView.swift */; };
+		97041BEF26D6368100778965 /* NodeInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97041BEE26D6368000778965 /* NodeInputView.swift */; };
 		9718717126C38F0E001CE29E /* ios_launcher_152.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716326C38F0E001CE29E /* ios_launcher_152.png */; };
 		9718717226C38F0E001CE29E /* ios_launcher_80.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716426C38F0E001CE29E /* ios_launcher_80.png */; };
 		9718717326C38F0E001CE29E /* ios_launcher_180.png in Resources */ = {isa = PBXBuildFile; fileRef = 9718716526C38F0E001CE29E /* ios_launcher_180.png */; };
@@ -68,6 +70,8 @@
 /* Begin PBXFileReference section */
 		68A6D543279F19835B2CB645 /* Node.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Node.swift; sourceTree = "<group>"; };
 		97041BEA26D486B400778965 /* ARButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARButton.swift; sourceTree = "<group>"; };
+		97041BEC26D5E1D900778965 /* AimView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AimView.swift; sourceTree = "<group>"; };
+		97041BEE26D6368000778965 /* NodeInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeInputView.swift; sourceTree = "<group>"; };
 		9718716326C38F0E001CE29E /* ios_launcher_152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_152.png; sourceTree = "<group>"; };
 		9718716426C38F0E001CE29E /* ios_launcher_80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_80.png; sourceTree = "<group>"; };
 		9718716526C38F0E001CE29E /* ios_launcher_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ios_launcher_180.png; sourceTree = "<group>"; };
@@ -232,6 +236,8 @@
 				97249A5C26BD03A300B895DD /* PickerSheetView.swift */,
 				FBD6764626CAB82D00795AEA /* LoadingProgressView.swift */,
 				97041BEA26D486B400778965 /* ARButton.swift */,
+				97041BEC26D5E1D900778965 /* AimView.swift */,
+				97041BEE26D6368000778965 /* NodeInputView.swift */,
 			);
 			path = components;
 			sourceTree = "<group>";
@@ -458,10 +464,12 @@
 				FBD6764726CAB82D00795AEA /* LoadingProgressView.swift in Sources */,
 				97249A5F26BD248100B895DD /* RemoteFileGenerator.swift in Sources */,
 				976B824A26B6FCB5000D403B /* AlertView.swift in Sources */,
+				97041BED26D5E1D900778965 /* AimView.swift in Sources */,
 				976B824C26B6FE4E000D403B /* ARContentView.swift in Sources */,
 				9766D08D260ACC5E006801B2 /* ARCoordinator.swift in Sources */,
 				97249A5B26BBD44F00B895DD /* BaseViewModel.swift in Sources */,
 				975E9DF226B8C31900D479CE /* BaseResponse.swift in Sources */,
+				97041BEF26D6368100778965 /* NodeInputView.swift in Sources */,
 				68A6DEDF0074EC2865003A85 /* Node.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
