@@ -52,11 +52,11 @@ struct ARNodeInformationSwiftUIView: View {
                 .frame(width: 280, height: 100, alignment: .center)
 
             }.frame(width: 280, height: 250, alignment: .center)
-            .background(Color.white)
             Battery(percentage: self.battery, color: .green)
                 .frame(width: 30, height: 10, alignment: .topTrailing)
         }
         .padding(10.0)
+        .background(Color.clear)
         .border(.black, width: 1)
     }
     

@@ -125,6 +125,8 @@ class ARCoordinator: NSObject {
 extension ARCoordinator: ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
+       
+        
         // Set CenterPoint
         if self.centerPoint == nil {
             let containerFrame = container.arView.frame
@@ -135,6 +137,7 @@ extension ARCoordinator: ARSessionDelegate {
             }
             return
         }
+        
         let cameraPos = self.container.arView.cameraTransform.translation
         
         // Button Look me
@@ -148,7 +151,9 @@ extension ARCoordinator: ARSessionDelegate {
                 infoEntity!.lookatMe(cameraPos)
             }
         }
+        
         if self.hasCapturedARNode {
+            // Center Pos Raycast
             let centerPointRaycastResult = container.arView.raycast(
                 from: centerPoint!,
                 allowing: .estimatedPlane,
@@ -162,16 +167,96 @@ extension ARCoordinator: ARSessionDelegate {
                     onPogress: nil,
                     onRes: {
                         self.capturedARNode?.updateData(newData: $0)
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                             self.isUpdatingHarvDataOfCapturedARNode = false
                         }
-                    })
+                    }
+                )
             }
+        
         }
         
+        // Center는 커지게
+        self.container.vm.anchors.forEach { anchor, pos in
+            anchor.focus(false)
+        }
+        guard let centerObj = self.container.arView.entity(at: centerPoint!) as? ARNode else {
+            return
+        }
+        centerObj.focus(true)
     }
     
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        let planeAnchors = anchors.filter {
+            $0 is ARPlaneAnchor
+        } as! [ARPlaneAnchor]
+        planeAnchors.forEach { anchor in
+            
+            switch (anchor.classification) {
+            case .window:
+                debugPrint("\(anchor.identifier) \(anchor.center) window")
+                break
+            case .wall:
+                debugPrint("\(anchor.identifier) \(anchor.center) wall")
+                break
+            case .none(_):
+                break
+            case .floor:
+                debugPrint("\(anchor.identifier) \(anchor.center) floor")
+                break
+            case .ceiling:
+                debugPrint("\(anchor.identifier) \(anchor.center) ceiling")
+                break
+            case .table:
+                debugPrint("\(anchor.identifier) \(anchor.center) table")
+                break
+            case .seat:
+                debugPrint("\(anchor.identifier) \(anchor.center) seat")
+                break
+            case .door:
+                debugPrint("\(anchor.identifier) \(anchor.center) door")
+                break
+            @unknown default:
+                break
+            }
+        }
+    }
     
+    func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
+        let planeAnchors = anchors.filter {
+            $0 is ARPlaneAnchor
+        } as! [ARPlaneAnchor]
+        planeAnchors.forEach { anchor in
+            
+            switch (anchor.classification) {
+            case .window:
+                // Add Window Node
+                break
+            case .wall:
+                debugPrint("\(anchor.identifier) \(anchor.center) wall")
+                break
+            case .none(_):
+                break
+            case .floor:
+                debugPrint("\(anchor.identifier) \(anchor.center) floor")
+                break
+            case .ceiling:
+                debugPrint("\(anchor.identifier) \(anchor.center) ceiling")
+                break
+            case .table:
+                debugPrint("\(anchor.identifier) \(anchor.center) table")
+                break
+            case .seat:
+                debugPrint("\(anchor.identifier) \(anchor.center) seat")
+                break
+            case .door:
+                // Add Door Node
+                break
+            @unknown default:
+                break
+            }
+        }
+    }
 }
 
 extension String {

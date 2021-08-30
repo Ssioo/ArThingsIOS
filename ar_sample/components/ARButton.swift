@@ -21,7 +21,7 @@ class ARButton: Entity, HasAnchoring, HasCollision, HasModel {
         do {
             var customViewMaterial = SimpleMaterial()
             let view = ARButtonBase(btnText: text)
-            
+            customViewMaterial.tintColor = .init(white: 1.0, alpha: 0.85)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
                     from: view.uiImage()!,
@@ -30,6 +30,8 @@ class ARButton: Entity, HasAnchoring, HasCollision, HasModel {
                         mipmapsMode: .allocateAndGenerateAll
                     )
                 ))
+            customViewMaterial.roughness = .init(floatLiteral: 0.0)
+            customViewMaterial.metallic = .init(floatLiteral: 1.0)
             self.model = ModelComponent(
                 mesh: .generateBox(size: [0.18, 0.04, 0.001]),
                 materials: [customViewMaterial]

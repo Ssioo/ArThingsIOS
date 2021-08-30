@@ -67,10 +67,14 @@ class ARNode: Entity, HasAnchoring, HasCollision {
         if self.isInfoShown {
             self.addChild(self.customInfoEntity!)
             //self.customInfoEntity?.setPosition([0, 0.3, 0], relativeTo: self.nodeEntity)
-            self.customInfoEntity?.position = [0, 0.3, 0]
+            self.customInfoEntity?.setPosition([0, 0.4, 0] ,relativeTo: self)
         } else {
             self.customInfoEntity?.removeFromParent()
         }
+    }
+    
+    func focus(_ focus: Bool) {
+        self.nodeEntity?.scale = focus ? [0.0004, 0.0004, 0.0004] : [0.0003, 0.0003, 0.0003]
     }
     
     required init() {
@@ -89,14 +93,17 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
         do {
             var customViewMaterial = SimpleMaterial()
             lastInfoView = ARNodeInformationSwiftUIView(harvData: [:], name: name, battery: 0.75)
+            customViewMaterial.tintColor = .init(white: 1.0, alpha: 0.9)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
-                    from: lastInfoView!.snapshot(size: CGSize(width: 300, height: 280))!,
+                    from: lastInfoView!.uiImage()!,
                     options: TextureResource.CreateOptions(
                         semantic: nil,
                         mipmapsMode: .allocateAndGenerateAll
                     )
                 ))
+            customViewMaterial.roughness = .init(floatLiteral: 0.0)
+            customViewMaterial.metallic = .init(floatLiteral: 0.0)
             self.model = ModelComponent(
                 mesh: .generateBox(size: [0.3, 0.28, 0.001]),
                 materials: [customViewMaterial]
@@ -118,6 +125,7 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
             var customViewMaterial = SimpleMaterial()
             lastInfoView = ARNodeInformationSwiftUIView(harvData: data, name: lastInfoView!.name, battery: lastInfoView!.battery - 0.001)
             let snapShot = lastInfoView!.uiImage()!
+            customViewMaterial.tintColor = .init(white: 1.0, alpha: 0.9)
             customViewMaterial.baseColor = try MaterialColorParameter.texture(
                 .generate(
                     from: snapShot,
@@ -126,6 +134,8 @@ class ARInfoNode: Entity, HasAnchoring, HasModel, HasCollision {
                         mipmapsMode: .allocateAndGenerateAll
                     )
                 ))
+            customViewMaterial.roughness = .init(floatLiteral: 0.0)
+            customViewMaterial.metallic = .init(floatLiteral: 0.0)
             self.model = ModelComponent(
                 mesh: .generateBox(size: [0.3, 0.28, 0.001]),
                 materials: [customViewMaterial]
