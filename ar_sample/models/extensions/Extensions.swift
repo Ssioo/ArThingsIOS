@@ -85,7 +85,7 @@ extension View {
 }
 
 extension ARFrame {
-    func extractMesh() -> MDLAsset {
+    func extractMesh(_ classFind: Bool = false) -> MDLAsset {
         // Fetch the default MTLDevice to initialize a MetalKit buffer allocator with
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Failed to get the system's default Metal device!")
@@ -103,6 +103,7 @@ extension ARFrame {
             
             // Some short handles, otherwise stuff will get pretty long in a few lines
             let geometry = meshAncor.geometry
+            
             let vertices = geometry.vertices
             let faces = geometry.faces
             let verticesPointer = vertices.buffer.contents()
@@ -113,6 +114,8 @@ extension ARFrame {
                 
                 // Extracting the current vertex with an extension method provided by Apple in Extensions.swift
                 let vertex = geometry.vertex(at: UInt32(vertexIndex))
+                
+                
                 
                 // Building a transform matrix with only the vertex position
                 // and apply the mesh anchors transform to convert into world space
@@ -127,6 +130,7 @@ extension ARFrame {
                 verticesPointer.storeBytes(of: vertexWorldPosition.y, toByteOffset: vertexOffset + componentStride, as: Float.self)
                 verticesPointer.storeBytes(of: vertexWorldPosition.z, toByteOffset: vertexOffset + (2 * componentStride), as: Float.self)
             }
+            
             
             // Initializing MDLMeshBuffers with the content of the vertex and face MTLBuffers
             let byteCountVertices = vertices.count * vertices.stride
@@ -147,6 +151,12 @@ extension ARFrame {
             
             // Finally creating the MDLMesh and adding it to the MDLAsset
             let mesh = MDLMesh(vertexBuffer: vertexBuffer, vertexCount: meshAncor.geometry.vertices.count, descriptor: vertexDescriptor, submeshes: [submesh])
+            if classFind {
+                let classification = geometry.classificationOf(faceWithIndex: 0)
+                if classification == .window || classification == .door {
+                    continue
+                }
+            }
             asset.add(mesh)
         }
         return asset
@@ -202,5 +212,43 @@ extension Entity {
             
         }
         
+    }
+}
+
+extension ARMeshGeometry {
+    func classificationOf(faceWithIndex index: Int) -> ARMeshClassification {
+        guard let classification = classification else { return .none }
+        let classificationAddress = classification.buffer.contents().advanced(by: index)
+        let classificationValue = Int(classificationAddress.assumingMemoryBound(to: UInt8.self).pointee)
+        return ARMeshClassification(rawValue: classificationValue) ?? .none
+    }
+}
+
+extension ARMeshClassification {
+    var description: String {
+        switch self {
+            case .ceiling: return "Ceiling"
+            case .door: return "Door"
+            case .floor: return "Floor"
+            case .seat: return "Seat"
+            case .table: return "Table"
+            case .wall: return "Wall"
+            case .window: return "Window"
+            case .none: return "None"
+            @unknown default: return "Unknown"
+        }
+    }
+    var color: UIColor {
+        switch self {
+            case .ceiling: return .red
+            case .door: return .green
+            case .floor: return .blue
+            case .seat: return .cyan
+            case .table: return .magenta
+            case .wall: return .yellow
+            case .window: return .black
+            case .none: return .systemOrange
+            @unknown default: return .white
+        }
     }
 }

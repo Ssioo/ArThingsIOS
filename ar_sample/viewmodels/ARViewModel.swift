@@ -16,6 +16,7 @@ class ARViewModel: BaseViewModel {
     
     var lastMapRawFearues: ARPointCloud? = nil
     var lastMeshes: MDLAsset? = nil
+    var lastTestMeshes: MDLAsset? = nil
     var lastARData: ARData? = nil
     
     var lastSavedARRemoteData: RemoteARMapIndex? = nil
@@ -27,10 +28,11 @@ class ARViewModel: BaseViewModel {
         self.fetchARRooms()
     }
     
-    func saveMap(features: ARPointCloud, meshes: MDLAsset, map: ARData) {
+    func saveMap(features: ARPointCloud, meshes: MDLAsset, map: ARData, _ skipMeshes: MDLAsset) {
         self.lastMapRawFearues = features
         self.lastMeshes = meshes
         self.lastARData = map
+        self.lastTestMeshes = skipMeshes
         debugPrint("RawFeatures Saved")
     }
     
@@ -190,10 +192,12 @@ class ARViewModel: BaseViewModel {
         let time = Date().timeIntervalSince1970
         let usdPath = "\(time).usd"
         let objPath = "\(time).obj"
+        let obj2Path = "\(time)2.obj"
         let mapPath = "\(time)_map.json"
         
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let urlOBJ = documentsPath.appendingPathComponent(objPath)
+        let url2OBJ = documentsPath.appendingPathComponent(obj2Path)
         let urlUSD = documentsPath.appendingPathComponent(usdPath)
         
         // Exporting the USD file
@@ -205,13 +209,16 @@ class ARViewModel: BaseViewModel {
                 return
             }
         }
-        if MDLAsset.canExportFileExtension("usd") {
+        if MDLAsset.canExportFileExtension("obj") {
             do {
                 try self.lastMeshes?.export(to: urlOBJ)
                 let meshString = try String(contentsOf: urlOBJ, encoding: .utf8)
                 try FileManager.default.removeItem(at: urlOBJ)
                 
-                var cleared: [Bool] = [false, false, false]
+                try self.lastTestMeshes?.export(to: url2OBJ)
+                let mesh2String = try String(contentsOf: url2OBJ, encoding: .utf8)
+                try FileManager.default.removeItem(at: url2OBJ)
+                var cleared: [Bool] = [false, false, false, false]
                 
                 guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else {
                     onFinish?(false)
@@ -232,6 +239,27 @@ class ARViewModel: BaseViewModel {
                         ],
                         onRes: { res in
                             cleared[0] = true
+                            debugPrint(cleared)
+                            if cleared.allSatisfy({ $0 == true }) {
+                            
+                                onFinish?(true)
+                            }
+                        }
+                    )
+                // Meshes
+                APiModule.instance
+                    .put(
+                        of: RemotePureFileContent.self,
+                        url: "/contents/arthings/\(currentRoomPath)/\(obj2Path)",
+                        body: [
+                            "content":"\(mesh2String)",
+                            "name": "\(obj2Path)",
+                            "format": "text",
+                            "type": "file",
+                            "path": "arthings/\(currentRoomPath)/\(obj2Path)"
+                        ],
+                        onRes: { res in
+                            cleared[3] = true
                             debugPrint(cleared)
                             if cleared.allSatisfy({ $0 == true }) {
                             

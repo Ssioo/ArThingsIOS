@@ -180,7 +180,8 @@ struct ARViewContainer: UIViewRepresentable {
             }
             
             let meshes = frame.extractMesh()
-            self.vm.saveMap(features: map.rawFeaturePoints, meshes: meshes, map: ARData(worldMap: map))
+            let skipMeshes = frame.extractMesh(true)
+            self.vm.saveMap(features: map.rawFeaturePoints, meshes: meshes, map: ARData(worldMap: map), skipMeshes)
             onFinish?(true)
         }
     }
