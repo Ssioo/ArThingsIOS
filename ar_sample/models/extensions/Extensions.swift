@@ -97,25 +97,30 @@ extension ARFrame {
         
         // Fetch all ARMeshAncors
         let meshAnchors = self.anchors.compactMap({ $0 as? ARMeshAnchor })
-        
         // Convert the geometry of each ARMeshAnchor into a MDLMesh and add it to the MDLAsset
+        
+        var meshString = "["
         for meshAncor in meshAnchors {
-            
+            debugPrint("skipped Anchor: ", meshAncor)
             // Some short handles, otherwise stuff will get pretty long in a few lines
             let geometry = meshAncor.geometry
-            
+        
             let vertices = geometry.vertices
             let faces = geometry.faces
             let verticesPointer = vertices.buffer.contents()
             let facesPointer = faces.buffer.contents()
+            let meshAncorPos = meshAncor.transform.position
+            
+            let classification = geometry.classificationOf(faceWithIndex: 0)
+            meshString += "{\"id\": \"\(meshAncor.identifier)\", \"class\": \"\(classification.description)\", \"transform\": {\"x\": \(meshAncorPos.x), \"y\": \(meshAncorPos.y), \"z\": \(meshAncorPos.z)},"
+            var vertexString =  "\"vertices\": ["
             
             // Converting each vertex of the geometry from the local space of their ARMeshAnchor to world space
             for vertexIndex in 0..<vertices.count {
                 
                 // Extracting the current vertex with an extension method provided by Apple in Extensions.swift
                 let vertex = geometry.vertex(at: UInt32(vertexIndex))
-                
-                
+            
                 
                 // Building a transform matrix with only the vertex position
                 // and apply the mesh anchors transform to convert into world space
@@ -129,7 +134,27 @@ extension ARFrame {
                 verticesPointer.storeBytes(of: vertexWorldPosition.x, toByteOffset: vertexOffset, as: Float.self)
                 verticesPointer.storeBytes(of: vertexWorldPosition.y, toByteOffset: vertexOffset + componentStride, as: Float.self)
                 verticesPointer.storeBytes(of: vertexWorldPosition.z, toByteOffset: vertexOffset + (2 * componentStride), as: Float.self)
+                
+                
+                let newVertexElementString = "{\"x\": \(vertexWorldPosition.x), \"y\": \(vertexWorldPosition.y), \"z\": \(vertexWorldPosition.z)}"
+                vertexString += newVertexElementString + ","
             }
+            meshString += vertexString.dropLast() + "],"
+            
+            var faceString = "\"faces\": ["
+            var classString = "\"classes\": ["
+            for faceIdx in 0..<faces.count {
+                let faceVertices = geometry.vertexIndicesOf(faceWithIndex: faceIdx)
+                let classFace = geometry.classificationOf(faceWithIndex: faceIdx)
+                classString += "\(classFace.rawValue),"
+                do {
+                    let faceVerticesJson = String(data: try JSONEncoder().encode(faceVertices), encoding: .utf8)!
+                    faceString += faceVerticesJson + ","
+                } catch {
+                }
+            }
+            meshString += faceString.dropLast() + "]},"
+            meshString += classString.dropLast() + "]},"
             
             
             // Initializing MDLMeshBuffers with the content of the vertex and face MTLBuffers
@@ -151,14 +176,20 @@ extension ARFrame {
             
             // Finally creating the MDLMesh and adding it to the MDLAsset
             let mesh = MDLMesh(vertexBuffer: vertexBuffer, vertexCount: meshAncor.geometry.vertices.count, descriptor: vertexDescriptor, submeshes: [submesh])
-            if classFind {
-                let classification = geometry.classificationOf(faceWithIndex: 0)
-                if classification == .window || classification == .door {
-                    continue
-                }
-            }
+            
             asset.add(mesh)
         }
+        meshString = meshString.dropLast() + "]"
+        
+        // Save MeshString
+        do {
+            let fileName = "\(Date().timeIntervalSince1970)_meshtxt.txt"
+            try meshString.saveToFile(fileName: fileName)
+        } catch {
+            
+        }
+        
+        
         return asset
     }}
 
@@ -221,6 +252,17 @@ extension ARMeshGeometry {
         let classificationAddress = classification.buffer.contents().advanced(by: index)
         let classificationValue = Int(classificationAddress.assumingMemoryBound(to: UInt8.self).pointee)
         return ARMeshClassification(rawValue: classificationValue) ?? .none
+    }
+    
+    func vertexIndicesOf(faceWithIndex index: Int) -> [Int] {
+        let indicesPerFace = faces.indexCountPerPrimitive
+        let facesPointer = faces.buffer.contents()
+        var vertexIndices = [Int]()
+        for offset in 0..<indicesPerFace {
+            let vertexIndexAddress = facesPointer.advanced(by: (index * indicesPerFace + offset) * MemoryLayout<UInt32>.size)
+            vertexIndices.append(Int(vertexIndexAddress.assumingMemoryBound(to: UInt32.self).pointee))
+        }
+        return vertexIndices
     }
 }
 

@@ -179,20 +179,22 @@ struct ARViewContainer: UIViewRepresentable {
                 return
             }
             
-            let meshes = frame.extractMesh()
             let skipMeshes = frame.extractMesh(true)
-            self.vm.saveMap(features: map.rawFeaturePoints, meshes: meshes, map: ARData(worldMap: map), skipMeshes)
+            self.vm.saveMap(features: map.rawFeaturePoints, meshes: skipMeshes, map: ARData(worldMap: map), skipMeshes)
             onFinish?(true)
+        
         }
     }
     
     private func initialize(context: Context, arView: ARView) {
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal, .vertical]
+        //config.planeDetection = [.horizontal, .vertical]
         config.sceneReconstruction = .meshWithClassification
-        config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
-        
-        arView.debugOptions.insert(.showWorldOrigin)
+        config.environmentTexturing = .automatic
+        arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
+        //config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+        arView.automaticallyConfigureSession = false
+        //arView.debugOptions.insert(.showWorldOrigin)
         arView.debugOptions.insert(.showSceneUnderstanding)
         arView.session.run(config, options: [])
         arView.session.delegate = context.coordinator
@@ -221,11 +223,11 @@ struct ARViewContainer: UIViewRepresentable {
         self.arView.session.pause()
         
         let config = ARWorldTrackingConfiguration()
-        
+        self.arView.automaticallyConfigureSession = false
         self.arView.debugOptions.insert(.showWorldOrigin)
         self.arView.debugOptions.insert(.showSceneUnderstanding)
-        self.arView.debugOptions.insert(.showPhysics)
-        self.arView.environment.sceneUnderstanding.options = [.occlusion, .physics]
+        //self.arView.debugOptions.insert(.showPhysics)
+        //self.arView.environment.sceneUnderstanding.options = [.occlusion, .physics]
 
 
         guard let map = data.worldMap else {

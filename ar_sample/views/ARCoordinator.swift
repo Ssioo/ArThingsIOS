@@ -191,7 +191,6 @@ extension ARCoordinator: ARSessionDelegate {
             $0 is ARPlaneAnchor
         } as! [ARPlaneAnchor]
         planeAnchors.forEach { anchor in
-            
             switch (anchor.classification) {
             case .window:
                 debugPrint("\(anchor.identifier) \(anchor.center) window")
