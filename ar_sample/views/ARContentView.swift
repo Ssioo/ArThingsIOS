@@ -188,13 +188,15 @@ struct ARViewContainer: UIViewRepresentable {
     
     private func initialize(context: Context, arView: ARView) {
         let config = ARWorldTrackingConfiguration()
-        //config.planeDetection = [.horizontal, .vertical]
+        config.planeDetection = [.horizontal, .vertical]
         config.sceneReconstruction = .meshWithClassification
         config.environmentTexturing = .automatic
         arView.renderOptions = [.disablePersonOcclusion, .disableDepthOfField, .disableMotionBlur]
         //config.frameSemantics = [.sceneDepth, .smoothedSceneDepth]
+
         arView.automaticallyConfigureSession = false
-        //arView.debugOptions.insert(.showWorldOrigin)
+        arView.debugOptions.insert(.showWorldOrigin)
+        arView.debugOptions.insert(.showStatistics)
         arView.debugOptions.insert(.showSceneUnderstanding)
         arView.session.run(config, options: [])
         arView.session.delegate = context.coordinator

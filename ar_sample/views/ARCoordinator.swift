@@ -125,8 +125,10 @@ class ARCoordinator: NSObject {
 extension ARCoordinator: ARSessionDelegate {
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-       
-        
+      
+        self.container.vm.colorImage = frame.capturedImage
+
+  
         // Set CenterPoint
         if self.centerPoint == nil {
             let containerFrame = container.arView.frame
@@ -187,74 +189,11 @@ extension ARCoordinator: ARSessionDelegate {
     }
     
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
-        let planeAnchors = anchors.filter {
-            $0 is ARPlaneAnchor
-        } as! [ARPlaneAnchor]
-        planeAnchors.forEach { anchor in
-            switch (anchor.classification) {
-            case .window:
-                debugPrint("\(anchor.identifier) \(anchor.center) window")
-                break
-            case .wall:
-                debugPrint("\(anchor.identifier) \(anchor.center) wall")
-                break
-            case .none(_):
-                break
-            case .floor:
-                debugPrint("\(anchor.identifier) \(anchor.center) floor")
-                break
-            case .ceiling:
-                debugPrint("\(anchor.identifier) \(anchor.center) ceiling")
-                break
-            case .table:
-                debugPrint("\(anchor.identifier) \(anchor.center) table")
-                break
-            case .seat:
-                debugPrint("\(anchor.identifier) \(anchor.center) seat")
-                break
-            case .door:
-                debugPrint("\(anchor.identifier) \(anchor.center) door")
-                break
-            @unknown default:
-                break
-            }
-        }
+
     }
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {
-        let planeAnchors = anchors.filter {
-            $0 is ARPlaneAnchor
-        } as! [ARPlaneAnchor]
-        planeAnchors.forEach { anchor in
-            
-            switch (anchor.classification) {
-            case .window:
-                // Add Window Node
-                break
-            case .wall:
-                debugPrint("\(anchor.identifier) \(anchor.center) wall")
-                break
-            case .none(_):
-                break
-            case .floor:
-                debugPrint("\(anchor.identifier) \(anchor.center) floor")
-                break
-            case .ceiling:
-                debugPrint("\(anchor.identifier) \(anchor.center) ceiling")
-                break
-            case .table:
-                debugPrint("\(anchor.identifier) \(anchor.center) table")
-                break
-            case .seat:
-                debugPrint("\(anchor.identifier) \(anchor.center) seat")
-                break
-            case .door:
-                // Add Door Node
-                break
-            @unknown default:
-                break
-            }
-        }
+
     }
 }
 

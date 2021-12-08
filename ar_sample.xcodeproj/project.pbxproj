@@ -630,14 +630,14 @@
 				CODE_SIGN_ENTITLEMENTS = ar_sample/ar_sample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ar_sample/Preview Content\"";
-				DEVELOPMENT_TEAM = 4L5H32H45H;
+				DEVELOPMENT_TEAM = 9SL4NN6496;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ar_sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -652,14 +652,14 @@
 				CODE_SIGN_ENTITLEMENTS = ar_sample/ar_sample.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"ar_sample/Preview Content\"";
-				DEVELOPMENT_TEAM = 4L5H32H45H;
+				DEVELOPMENT_TEAM = 9SL4NN6496;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = ar_sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.whoissio.arsample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
