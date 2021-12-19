@@ -192,31 +192,38 @@ class ARViewModel: BaseViewModel {
         let time = Date().timeIntervalSince1970
         let usdPath = "\(time).usd"
         let objPath = "\(time).obj"
-
+        let obj2Path = "\(time)2.obj"
+        let mapPath = "\(time)_map.json"
+        
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let urlOBJ = documentsPath.appendingPathComponent(objPath)
+        let url2OBJ = documentsPath.appendingPathComponent(obj2Path)
         let urlUSD = documentsPath.appendingPathComponent(usdPath)
-        
         
         // Exporting the USD file
         if MDLAsset.canExportFileExtension("usd") {
             do {
                 try self.lastMeshes?.export(to: urlUSD)
-                
             } catch {
                 onFinish?(false)
                 return
             }
         }
-        
         if MDLAsset.canExportFileExtension("obj") {
             do {
                 try self.lastMeshes?.export(to: urlOBJ)
                 let meshString = try String(contentsOf: urlOBJ, encoding: .utf8)
                 try FileManager.default.removeItem(at: urlOBJ)
                 
-                //??
+                try self.lastTestMeshes?.export(to: url2OBJ)
+                let mesh2String = try String(contentsOf: url2OBJ, encoding: .utf8)
+                try FileManager.default.removeItem(at: url2OBJ)
                 var cleared: [Bool] = [false, false, false, false]
+                
+                guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else {
+                    onFinish?(false)
+                    return }
+        
                 
                 // Meshes
                 APiModule.instance
@@ -239,8 +246,68 @@ class ARViewModel: BaseViewModel {
                             }
                         }
                     )
+                // Meshes
+                APiModule.instance
+                    .put(
+                        of: RemotePureFileContent.self,
+                        url: "/contents/arthings/\(currentRoomPath)/\(obj2Path)",
+                        body: [
+                            "content":"\(mesh2String)",
+                            "name": "\(obj2Path)",
+                            "format": "text",
+                            "type": "file",
+                            "path": "arthings/\(currentRoomPath)/\(obj2Path)"
+                        ],
+                        onRes: { res in
+                            cleared[3] = true
+                            debugPrint(cleared)
+                            if cleared.allSatisfy({ $0 == true }) {
+                            
+                                onFinish?(true)
+                            }
+                        }
+                    )
                 
-                
+                // Map BAse64
+                APiModule.instance
+                    .put(
+                        of: RemotePureFileContent.self,
+                        url: "/contents/arthings/\(currentRoomPath)/\(mapPath)",
+                        body: [
+                            "content":"\(mapJson)",
+                            "name": "\(mapPath)",
+                            "format": "text",
+                            "type": "file",
+                            "path": "arthings/\(currentRoomPath)/\(objPath)"
+                        ],
+                        onRes: { res in
+                            cleared[1] = true
+                            debugPrint(cleared)
+                            if cleared.allSatisfy({ $0 == true }) {
+                                onFinish?(true)
+                            }
+                        }
+                    )
+                // Indexing
+                APiModule.instance
+                    .put(
+                        of: RemotePureFileContent.self,
+                        url: "/contents/arthings/\(currentRoomPath)/index.json",
+                        body: [
+                            "content":"\(makeInitialARRoomJSON(objPath: objPath, mapPath: mapPath))",
+                            "name": "index.json",
+                            "format": "text",
+                            "type": "file",
+                            "path": "arthings/\(currentRoomPath)/index.json"
+                        ],
+                        onRes: { res in
+                            cleared[2] = true
+                            debugPrint(cleared)
+                            if cleared.allSatisfy({ $0 == true }) {
+                                onFinish?(true)
+                            }
+                        }
+                    )
             } catch let error {
                 fatalError(error.localizedDescription)
             }
