@@ -8,6 +8,7 @@
 import Foundation
 
 class BaseViewModel: ObservableObject {
+    @Published var isCapturing: Bool = false
     @Published var isLoading: Bool = false
     @Published var isShowAlert: Bool = false
     @Published var alertObject: AlertObject? = nil

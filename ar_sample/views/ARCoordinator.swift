@@ -193,7 +193,7 @@ extension ARCoordinator: ARSessionDelegate {
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
         let currentTime = Date().timeIntervalSince1970
 
-        if currentTime - self.timestamp >= 0.5{
+        if container.vm.isCapturing && currentTime - self.timestamp >= 0.5{
             self.timestamp = currentTime
             guard let frame = session.currentFrame else {return}
             let pixelBuffer = frame.capturedImage

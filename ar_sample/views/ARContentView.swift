@@ -67,6 +67,7 @@ struct ARContentView: View {
                                 }
                             } else {
                                 debugPrint("Saving...")
+                                vm.isCapturing = false
                                 vm.isLoading = true
                                 // First, extract current ARMap from ARViewContainer's ARView's session
                                 arViewContainer.saveMap(currentRoom: currentRoom) { res in
@@ -120,6 +121,20 @@ struct ARContentView: View {
                                 .frame(width: 160, height: 40, alignment: .center)
                                 .background(Color.blue)
                         })
+                        Button(action: {
+                            // On Every show up pickerView, fetch All ARRooms' indicies to latest data
+                            vm.isCapturing = true
+
+                        }, label: {
+                            Text("Capture images")
+                                .foregroundColor(.white)
+                                .frame(width: 160, height: 40, alignment: .center)
+                                .background(Color.blue)
+                        })
+                        
+                        
+                        
+                        
                     }
                 }
             }
