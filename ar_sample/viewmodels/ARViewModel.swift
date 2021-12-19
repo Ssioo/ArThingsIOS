@@ -13,8 +13,7 @@ class ARViewModel: BaseViewModel {
     @Published var arRooms: [String] = []
     var currentRoom: String = ""
     
-    // color image for capturing frame
-    var colorImage: CVPixelBuffer?
+
     var lastMapRawFearues: ARPointCloud? = nil
     var lastMeshes: MDLAsset? = nil
     var lastTestMeshes: MDLAsset? = nil
@@ -193,7 +192,6 @@ class ARViewModel: BaseViewModel {
         let time = Date().timeIntervalSince1970
         let usdPath = "\(time).usd"
         let objPath = "\(time).obj"
-        let imgPath = "\(time).png"
 
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let urlOBJ = documentsPath.appendingPathComponent(objPath)

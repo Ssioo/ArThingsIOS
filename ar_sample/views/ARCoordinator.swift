@@ -15,9 +15,11 @@ import QuickLook
 class ARCoordinator: NSObject {
     var container: ARViewContainer
     var centerPoint: CGPoint? = nil
+    var timestamp: TimeInterval
     
     init(_ container: ARViewContainer) {
         self.container = container
+        self.timestamp = Date().timeIntervalSince1970
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -124,10 +126,10 @@ class ARCoordinator: NSObject {
 
 extension ARCoordinator: ARSessionDelegate {
     
+    
+    
     func session(_ session: ARSession, didUpdate frame: ARFrame) {
-      
-        self.container.vm.colorImage = frame.capturedImage
-
+    
   
         // Set CenterPoint
         if self.centerPoint == nil {
@@ -187,9 +189,19 @@ extension ARCoordinator: ARSessionDelegate {
         }
         centerObj.focus(true)
     }
-    
-    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
 
+    func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        let currentTime = Date().timeIntervalSince1970
+
+        if currentTime - self.timestamp >= 0.5{
+            self.timestamp = currentTime
+            guard let frame = session.currentFrame else {return}
+            let pixelBuffer = frame.capturedImage
+            let camera = frame.camera
+            debugPrint(currentTime, camera)
+            
+        }
+        
     }
     
     func session(_ session: ARSession, didAdd anchors: [ARAnchor]) {

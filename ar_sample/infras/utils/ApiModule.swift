@@ -12,7 +12,7 @@ import Alamofire
 class APiModule {
     static let instance = APiModule()
     let BASE_URL = "https://ml.mobed.yonsei.ac.kr/user/akfgksmskdw/api"
-    let JUPYTER_TOKEN = "29548a20236c4d20b0d9a61e0fbe6196"
+    let JUPYTER_TOKEN = "c394559550ba4ca3a56432a1a459be59"
     
     let SOLACLE_URL = "http://165.132.105.197:9000"
     
