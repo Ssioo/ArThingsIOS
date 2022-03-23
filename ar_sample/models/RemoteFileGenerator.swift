@@ -42,3 +42,29 @@ extension ARData: Codable {
         }
     }
 }
+extension simd_float4x4: Collection {
+    public var startIndex: Int {
+        return 0
+    }
+
+    public var endIndex: Int {
+        return 4 // for `sims_float4x4` it would be 4, number of columns
+    }
+
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+}
+extension simd_float3x3: Collection {
+    public var startIndex: Int {
+        return 0
+    }
+
+    public var endIndex: Int {
+        return 3 // for `sims_float4x4` it would be 4, number of columns
+    }
+
+    public func index(after i: Int) -> Int {
+        return i + 1
+    }
+}

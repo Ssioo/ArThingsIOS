@@ -15,11 +15,29 @@ import QuickLook
 class ARCoordinator: NSObject {
     var container: ARViewContainer
     var centerPoint: CGPoint? = nil
-    var timestamp: TimeInterval
     
+    //time stamp for capturing period and measuring speed of device
+    var timestampForCapture: TimeInterval
+    var timestampForDeviceSpeed : TimeInterval
+    
+    // camera transform stamp for  measuring speed
+    var cameraTransformStamp: simd_float4x4
+    var cameraEulerAnglesStamp: simd_float3
+    var speedOfDevice: Float
+    var angularSpeedOfDevice: Float
+    var captureQuality : Float
     init(_ container: ARViewContainer) {
         self.container = container
-        self.timestamp = Date().timeIntervalSince1970
+        
+        self.timestampForCapture = Date().timeIntervalSince1970
+        self.timestampForDeviceSpeed = Date().timeIntervalSince1970
+        self.cameraTransformStamp = self.container.arView.cameraTransform.matrix
+        self.cameraEulerAnglesStamp = (SIMD3<Float>)(Float(0.0),Float(0.0),Float(0.0))
+        self.speedOfDevice = 0
+        self.angularSpeedOfDevice = 0
+        self.captureQuality = 0
+
+
     }
     
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -189,16 +207,194 @@ extension ARCoordinator: ARSessionDelegate {
         }
         centerObj.focus(true)
     }
+    
+    func getImageFolder() -> URL {
+        let path = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent(container.vm.currentRoom, isDirectory: true)
 
+        if (!FileManager.default.fileExists(atPath: path.path)) {
+            do {
+                try FileManager.default.createDirectory(atPath: path.path, withIntermediateDirectories: true, attributes: nil)
+                
+            } catch {
+                print(error.localizedDescription);
+            }
+            
+        }
+        return path
+    }
+
+    func clearImageFolder() {
+        let fileManager = FileManager.default
+        let tempFolderPath = try! getImageFolder().path
+        do {
+            let filePaths = try fileManager.contentsOfDirectory(atPath: tempFolderPath)
+            for filePath in filePaths {
+                try fileManager.removeItem(atPath: tempFolderPath + filePath)
+            }
+        } catch {
+            print("Could not clear temp folder: \(error)")
+        }
+    }
+    
+    struct cameraData: Codable {
+        var transform: String
+        var projectionMatrix: String
+        var intrinsics: String
+    }
+    
+    func MatrixtoString(array: simd_float3x3) -> String? {
+        var result: String = "[\n"
+        for i in 0..<3 {
+            for j in 0..<3{
+                if i == 2 && j == 2 {
+                    result.append("\(array[i][j])")
+                }
+                else{
+                    result.append("\(array[i][j]),\n")
+                }
+                
+            }
+        }
+        result.append("]\n")
+        return result
+    }
+    
+    func MatrixtoString(array: simd_float4x4) -> String? {
+        var result: String = "[\n"
+        for i in 0..<4 {
+            for j in 0..<4 {
+                if i == 3 && j == 3 {
+                    result.append("\(array[i][j])\n")
+                    
+                }
+                else{
+                    result.append("\(array[i][j]),\n")
+                }
+            }
+        }
+        result.append("]")
+        return result
+    }
+  
+    func makeCameraInfoJSON(camera: ARCamera) -> String {
+
+        let transform: simd_float4x4 = camera.transform
+        let viewMatrix: simd_float4x4 = camera.viewMatrix(for: UIInterfaceOrientation.landscapeLeft)
+        let projectionMatrix: simd_float4x4 = camera.projectionMatrix
+        let intrinsics: simd_float3x3 = camera.intrinsics
+        
+        var json :String = "{\n"
+        
+        json.append("\"transform\" : ")
+        var stringMatrix :String = MatrixtoString(array: transform)!
+        stringMatrix.append(",\n")
+        json.append(stringMatrix)
+        
+        json.append("\"viewMatrix\" : ")
+        stringMatrix = MatrixtoString(array: viewMatrix)!
+        stringMatrix.append(",\n")
+        json.append(stringMatrix)
+        
+        json.append("\"projectionMatrix\" : ")
+        stringMatrix = MatrixtoString(array: projectionMatrix)!
+        stringMatrix.append(",\n")
+        json.append(stringMatrix)
+        
+        json.append("\"intrinsics\" : ")
+        stringMatrix=MatrixtoString(array: intrinsics)!
+        stringMatrix.append("\n")
+        json.append(stringMatrix)
+        json.append("}")
+        
+        return json
+        
+    
+    }
+
+    func uploadToRemote(url: String, content: String, name:String, format:String, path: String){
+        APiModule.instance
+            .put(
+                of: RemotePureFileContent.self,
+                //url: "/contents/arthings/\(container.vm.currentRoom)/\(currentTime).json",
+                url:url,
+                body: [
+                    "content":(content),
+                    "name":name,
+                    "format":format,
+                    "type": "file",
+                    "path":path
+                ],
+                onRes: { res in
+                    debugPrint("uploaded")
+
+                }
+            )// APiModule put
+    }
+    
+    func getSpeedARCam(transform_prev: simd_float4x4, transform:simd_float4x4, deltaT: Float) -> Float{
+        var speed: Float
+        speed = (transform_prev[3][0] - transform[3][0])*(transform_prev[3][0] - transform[3][0])
+        speed +=    (transform_prev[3][1] - transform[3][1])*(transform_prev[3][1] - transform[3][1])
+        speed +=    (transform_prev[3][2] - transform[3][2])*(transform_prev[3][2] - transform[3][2])
+        speed = sqrt(speed)/deltaT
+        return speed
+    }
+    
+    func getAngluarSpeedARCam(rotation_prev: simd_float3, rotation:simd_float3, deltaT: Float) -> Float{
+        var speed: Float
+        speed = abs(rotation[0]-rotation_prev[0])/deltaT
+        speed += abs(rotation[1]-rotation_prev[1])/deltaT
+        speed += abs(rotation[2]-rotation_prev[2])/deltaT
+        return speed
+    }
+    
     func session(_ session: ARSession, didUpdate anchors: [ARAnchor]) {
+        //get current AR Frame
+        guard let frame = session.currentFrame else {return}
+    
         let currentTime = Date().timeIntervalSince1970
+        let currentTransform = frame.camera.transform
+        let currentEulerAngles = frame.camera.eulerAngles
 
-        if container.vm.isCapturing && currentTime - self.timestamp >= 0.5{
-            self.timestamp = currentTime
-            guard let frame = session.currentFrame else {return}
+        //update speed of device
+        speedOfDevice = getSpeedARCam(transform_prev: cameraTransformStamp,transform: currentTransform,deltaT: Float((currentTime - timestampForDeviceSpeed)))
+        angularSpeedOfDevice = getAngluarSpeedARCam(rotation_prev: cameraEulerAnglesStamp,rotation: currentEulerAngles, deltaT: Float((currentTime - timestampForDeviceSpeed)))
+        captureQuality = 1 - speedOfDevice/10 - angularSpeedOfDevice/100
+
+        //update time stamp and transform of device for speed calculation
+        timestampForDeviceSpeed = currentTime
+        cameraTransformStamp = currentTransform
+        cameraEulerAnglesStamp = currentEulerAngles
+        //debugPrint("arSession","speed of device",currentTime,speedOfDevice)
+        //debugPrint("arSession","angular speed",currentTime,angularSpeedOfDevice)
+        debugPrint("arSession","capture quality : ",captureQuality)
+        
+        //capture image minimum period is 0.5 seconds
+        if container.vm.isCapturing && currentTime - self.timestampForCapture >= 0.5 && captureQuality >= 0.995{
+            
+            self.timestampForCapture = currentTime
             let pixelBuffer = frame.capturedImage
             let camera = frame.camera
-            debugPrint(currentTime, camera)
+            
+            //captured image to ui image to save
+            let imageSize = CGSize(width: CVPixelBufferGetWidth(pixelBuffer), height: CVPixelBufferGetHeight(pixelBuffer))
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            let context = CIContext.init(options: nil)
+            guard let cgImageRef = context.createCGImage(ciImage, from: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height)) else { return }
+            let uiImage = UIImage(cgImage: cgImageRef)
+            
+            // Save image (the same for depth)
+            let imagePath = try! getImageFolder().appendingPathComponent("\(currentTime).jpg")
+            let imageData = uiImage.jpegData(compressionQuality: 0.9)!
+            try! uiImage.jpegData(compressionQuality: 0.9)?.write(to: imagePath)
+            
+            //사진 upload는 저장할때로 옮겨야할꺼 같다. 여러파일 한방에 올리게
+            uploadToRemote(url:"/contents/arthings/\(container.vm.currentRoom)/\(currentTime).json",
+                           content:"\(makeCameraInfoJSON(camera:camera))",
+                           name:"index.json",
+                           format:"text",
+                           path:"arthings/\(container.vm.currentRoom)/\(currentTime).json")
+
             
         }
         
@@ -222,3 +418,4 @@ extension String {
         }
     }
 }
+

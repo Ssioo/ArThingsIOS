@@ -185,15 +185,16 @@ class ARViewModel: BaseViewModel {
     func saveCurrentWorldDataToRemote(currentRoom: String, onFinish: ((Bool) -> Void)? = nil) {
         // file 생성
         let currentRoomPath = currentRoom
+        
         if currentRoom == "" {
             onFinish?(false)
             return
         }
         let time = Date().timeIntervalSince1970
-        let usdPath = "\(time).usd"
-        let objPath = "\(time).obj"
-        let obj2Path = "\(time)2.obj"
-        let mapPath = "\(time)_map.json"
+        let usdPath = currentRoomPath+"\(time).usd"
+        let objPath = currentRoomPath+"\(time).obj"
+        let obj2Path = currentRoomPath+"\(time)2.obj"
+        let mapPath = currentRoomPath+"\(time)_map.json"
         
         let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let urlOBJ = documentsPath.appendingPathComponent(objPath)
@@ -204,7 +205,8 @@ class ARViewModel: BaseViewModel {
         if MDLAsset.canExportFileExtension("usd") {
             do {
                 try self.lastMeshes?.export(to: urlUSD)
-            } catch {
+            }
+            catch {
                 onFinish?(false)
                 return
             }
@@ -222,7 +224,8 @@ class ARViewModel: BaseViewModel {
                 
                 guard let mapJson = String(data: try JSONEncoder().encode(self.lastARData!), encoding: .utf8) else {
                     onFinish?(false)
-                    return }
+                    return
+                }
         
                 
                 // Meshes
@@ -246,6 +249,7 @@ class ARViewModel: BaseViewModel {
                             }
                         }
                     )
+                
                 // Meshes
                 APiModule.instance
                     .put(
@@ -287,7 +291,7 @@ class ARViewModel: BaseViewModel {
                                 onFinish?(true)
                             }
                         }
-                    )
+                    )//put
                 // Indexing
                 APiModule.instance
                     .put(
@@ -307,14 +311,17 @@ class ARViewModel: BaseViewModel {
                                 onFinish?(true)
                             }
                         }
-                    )
-            } catch let error {
+                    )// put
+            }//do
+            catch let error {
                 fatalError(error.localizedDescription)
-            }
-        } else {
+            }//catch
+        }//export?
+        else {
             fatalError("Can't export OBJ")
-        }
-    }
+        }//else
+        
+    }// func saveCurrentWorldDataToRemote
     
     func updateAnchorsToRemote(currentRoomPath: String, onFail: (() -> Void)? = nil, onSuccess: (() -> Void)? = nil) {
         // Indexing
@@ -340,7 +347,7 @@ class ARViewModel: BaseViewModel {
                     debugPrint(res)
                     onSuccess?()
                 }
-            )
+            )//put
     }
     
     
@@ -359,5 +366,5 @@ class ARViewModel: BaseViewModel {
         } catch {
             return ""
         }
-    }
+    }//func makeInitialARRoomJSON
 }
